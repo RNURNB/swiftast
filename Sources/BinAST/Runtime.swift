@@ -55,6 +55,8 @@ public enum TRuntimeSwiftType {
 
     case type
     case typeList
+    
+        case cell
 }
 
 public let RuntimeSwiftType_None:UInt8 = 0
@@ -266,6 +268,9 @@ public struct RuntimeValue {
                 case .type:
                     return false //??
                 case .typeList:
+                    return false //??
+                    
+                case .cell:
                     return false //??
             }
         }
