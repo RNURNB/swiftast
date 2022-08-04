@@ -8,7 +8,7 @@ import PackageDescription
 
 let products: [Product] = [
   // Main executable.
-
+  .executable(name: "swiftast", targets: ["swiftast"]),
   // Executable for running tests written in Python (from 'PyTest' directory).
   // This is what we will be running 99% of the time.
   
@@ -45,6 +45,8 @@ let targets: [Target] = [
   // Apparently we have our own implementation of unlimited integers…
   // Ehh…
   .target(name: "BinAST", dependencies: ["SwiftAST"], path: "Sources/BinAST"),
+  
+  .target(name: "swiftast", dependencies: ["SwiftAST","BinAST"]),
  
 ]
 
