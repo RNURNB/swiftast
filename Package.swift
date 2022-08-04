@@ -15,8 +15,8 @@ let products: [Product] = [
   // Violet as a library.
   //.library(name: "LibViolet", targets: ["VioletVM"]),
   .library(name: "BinAST", targets: ["BinAST"]),
-  .library(name: "SwiftAST", targets: ["SwiftAST"]),
-  .
+  .library(name: "SwiftAST", targets: ["SwiftAST"])
+ 
 ]
 
 // ====================
