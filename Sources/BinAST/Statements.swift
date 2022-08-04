@@ -266,7 +266,7 @@ public class CodeBlock : ASTBase, Statement {
     }
 
     public static func CodeBlockunarchive(data: SCLData, instance:AST?=nil) throws -> AST {
-        var i:CodeBlock=instance != nil ? instance as! CodeBlock : try ASTFromTag(data: data) as! CodeBlock
+        let i:CodeBlock=instance != nil ? instance as! CodeBlock : try ASTFromTag(data: data) as! CodeBlock
     
         _=try ASTBase.unarchive(data: data, instance: i)
         
@@ -339,7 +339,7 @@ public class ReturnStatement : ASTBase, Statement {
     }
 
     public static func ReturnStatementunarchive(data: SCLData, instance:AST?=nil) throws -> AST {
-        var i:ReturnStatement=instance != nil ? instance as! ReturnStatement : try ASTFromTag(data: data) as! ReturnStatement
+        let i:ReturnStatement=instance != nil ? instance as! ReturnStatement : try ASTFromTag(data: data) as! ReturnStatement
     
         _=try ASTBase.unarchive(data: data, instance: i)
         
@@ -427,9 +427,9 @@ public class ClosureExpression : ASTBase {
         }
 
         public func copy() -> Signature {
-            var cl:[CaptureItem]?=nil
+            let cl:[CaptureItem]?=nil
 
-            var pc:ParameterClause?=nil
+            let pc:ParameterClause?=nil
 
             var fr:FunctionResult?=nil
             if self.functionResult != nil {fr=self.functionResult!.copy() as! FunctionResult}
@@ -532,7 +532,7 @@ public class ClosureExpression : ASTBase {
     }
 
     public static func ClosureExpressionunarchive(data: SCLData, instance:AST?=nil) throws -> AST {
-        var i:ClosureExpression=instance != nil ? instance as! ClosureExpression : try ASTFromTag(data: data) as! ClosureExpression
+        let i:ClosureExpression=instance != nil ? instance as! ClosureExpression : try ASTFromTag(data: data) as! ClosureExpression
     
         _=try ASTBase.unarchive(data: data, instance: i)
 
@@ -588,7 +588,7 @@ public class ClosureExpression : ASTBase {
         }
 
         if data.readBool() {
-            var c=Int(data.readWord())
+            let c=Int(data.readWord())
             i.statements=[]
             for _ in 0..<c {
                 i.statements!.append(try ASTFromTag(data: data))
@@ -604,7 +604,7 @@ public class ClosureExpression : ASTBase {
             s=[]
             for ss in statements! {s!.append(ss.copy())}
         }
-        return ClosureExpression(signature: signature?.copy() as? Signature, statements: s, location: self.location)
+        return ClosureExpression(signature: signature?.copy(), statements: s, location: self.location)
     }
     
     public override func replace(name: String, with: AST) -> AST {return self}
@@ -612,7 +612,7 @@ public class ClosureExpression : ASTBase {
     public override func runDeclarations(isTopLevel:Bool) throws {}
     
     public override func exec() throws -> Value {
-        var result:Value = runtimeNilValue
+        let result:Value = runtimeNilValue
 
         //TODO
         
@@ -757,7 +757,7 @@ public class FunctionCallExpression : ASTBase {
     }
 
     public static func FunctionCallExpressionunarchive(data: SCLData, instance:AST?=nil) throws -> AST {
-        var i:FunctionCallExpression=instance != nil ? instance as! FunctionCallExpression : try ASTFromTag(data: data) as! FunctionCallExpression
+        let i:FunctionCallExpression=instance != nil ? instance as! FunctionCallExpression : try ASTFromTag(data: data) as! FunctionCallExpression
     
         _=try ASTBase.unarchive(data: data, instance: i)
 
@@ -836,9 +836,9 @@ public class FunctionCallExpression : ASTBase {
                     case .namedMemoryReference(let name, let ast):
                         try ast.runDeclarations(isTopLevel: isTopLevel)
                     case .`operator`(let op):
-                        try op.runDeclarations(isTopLevel: isTopLevel)
+                        op.runDeclarations(isTopLevel: isTopLevel)
                     case .namedOperator(let name, let op):
-                        try op.runDeclarations(isTopLevel: isTopLevel)
+                        op.runDeclarations(isTopLevel: isTopLevel)
                 }
             }
         }
@@ -854,7 +854,7 @@ public class FunctionCallExpression : ASTBase {
             throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.internalError("checkParameters for illegal function decl:\(f)"), sourceLocatable: self.location)
         }*/
 
-        var argcount=(argumentClause?.count ?? 0) + (trailingClosure != nil ? 1 : 0)
+        let argcount=(argumentClause?.count ?? 0) + (trailingClosure != nil ? 1 : 0)
         if function.signature.parameterList.count != argcount {
             //check varargs
             var ok=false
@@ -882,10 +882,10 @@ public class FunctionCallExpression : ASTBase {
                         aname=name
                         atype=try ast.getType()
                     case .`operator`(let op):
-                        atype=try op.getType() //TODO Operator is of type String, type of expression is ???
+                        atype=op.getType() //TODO Operator is of type String, type of expression is ???
                     case .namedOperator(let name, let op):
                         aname=name
-                        atype=try op.getType() //TODO Operator is of type String, type of expression is ???
+                        atype=op.getType() //TODO Operator is of type String, type of expression is ???
                 }
 
                 let p=function.signature.parameterList[pi]
@@ -1005,11 +1005,11 @@ public class FunctionCallExpression : ASTBase {
     }
     
     public override func exec() throws -> Value {
-        var result:Value = runtimeNilValue
+        let result:Value = runtimeNilValue
 
         let callee=try postfixExpression.exec()
 
-        var instance:Any?=nil
+        let instance:Any?=nil
 
         //print("function call ",resolvedTarget!.name," has generic args:",resolvedTarget!.genericParameterClause)
 
@@ -1099,7 +1099,7 @@ public class FunctionCallExpression : ASTBase {
                 if let ff=callee.value as? [RuntimeFunctionDeclaration] {
                     //check argument matching
                     var function: FunctionDeclaration?=nil
-                    for var fff in ff {
+                    for fff in ff {
                         var f:FunctionDeclaration?=nil
                         if fff is FunctionDeclaration {f=fff as! FunctionDeclaration}
                         /*else if let m=fff as? RuntimeMethod {

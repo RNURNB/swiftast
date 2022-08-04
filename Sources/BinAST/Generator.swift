@@ -335,7 +335,7 @@ extension SwiftAST.VariableDeclaration : BinASTRepresentable {
             let tattrs=getAttributes(attributes: typeAnnotation.attributes) 
             let ta=ASTTypeAnnotation(type: tat, attributes: tattrs, isInOutParameter: typeAnnotation.isInOutParameter)
 
-            var mutationModifier: Modifier?=nil
+            let mutationModifier: Modifier?=nil
             let a=getAttributes(attributes: self.attributes)
             let getter=BinAST.GetterSetterKeywordBlock.GetterKeywordClause(name: nil, block: block, attributes: a, mutationModifier: mutationModifier)
             let gs=BinAST.GetterSetterKeywordBlock(getter: getter, setter: nil)
@@ -436,7 +436,7 @@ extension SwiftAST.VariableDeclaration : BinASTRepresentable {
 
             let v=Variable(name: name.textDescription, typeAnnotation: ta, isConstant: false, 
                            attributes: [], modifiers: [], location: self, getterSetterKeywordBlock: nil, willSetDidSetBlock: wsds)        
-            let vv = VariableDeclaration(variable: v, typeAnnotation: ta, isConstant: false, initializer: nil, 
+            let vv = VariableDeclaration(variable: v, typeAnnotation: ta, isConstant: false, initializer: initializer, 
                                          attributes: attrs, modifiers: mod, location:self)
                     
             try ASTModule.current.declareVar(variable: v)
@@ -644,11 +644,11 @@ extension SwiftAST.StructDeclaration : BinASTRepresentable {
       //append dummy scope
       ASTModule.current.pushScope(origin: self.name.textDescription)
       
-      var members:[BinAST.Member]=[]
+      let members:[BinAST.Member]=[]
       for m in self.members {
           switch m {
               case .declaration(let decl):
-                  let mm=try decl.ast()
+                  let _=try decl.ast()
                   //print("got struct member:",mm)
               case .compilerControl(let cc):
                   throw ASTGenerationError("todo compilerControlStatement")
@@ -1196,8 +1196,8 @@ extension LiteralExpression : BinASTRepresentable {
 func getParameterList(_ parameterList: [SwiftAST.FunctionSignature.Parameter]) throws -> [BinAST.FunctionSignature.Parameter] {
       var result: [FunctionSignature.Parameter]=[]
       for p in parameterList {
-          let tat=try ASTType.get(type:p.typeAnnotation.type ?? AnyType())
-          let tattrs=p.typeAnnotation != nil ? getAttributes(attributes: p.typeAnnotation.attributes) : []
+          let tat=try ASTType.get(type:p.typeAnnotation.type /*?? AnyType()*/)
+          let tattrs=getAttributes(attributes: p.typeAnnotation.attributes)
           let ta=ASTTypeAnnotation(type: tat, attributes: tattrs, isInOutParameter: p.typeAnnotation.isInOutParameter)
           
           var pp=FunctionSignature.Parameter(externalName:p.externalName?.textDescription, localName:p.localName.textDescription, typeAnnotation: ta,
@@ -1284,7 +1284,7 @@ extension SwiftAST.ClosureExpression: BinASTRepresentable {
                     }
                 }
 
-                var expr=try ci.expression.ast()
+                let expr=try ci.expression.ast()
 
                 sig!.captureList!.append(BinAST.ClosureExpression.Signature.CaptureItem(specifier: spec, expression: expr))
             }

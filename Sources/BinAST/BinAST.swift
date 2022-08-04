@@ -2492,13 +2492,13 @@ public enum Member: AST {
             case .general(let ast):
                 return try ast.getType()
             case .property(let pm):
-                return try pm.getType()
+                return pm.getType()
             case .method(let mm):
                 return try mm.getType()
             case .initializer(let im):
                 return try im.getType()
             case .`subscript`(let sm):
-                return try sm.getType()
+                return sm.getType()
             case .associatedType(let am):
                 return try am.getType()
         }

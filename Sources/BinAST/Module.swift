@@ -188,7 +188,7 @@ public class Scope: ASTBase, Identifiable {
             n.removeFirst()
             let type=try findType(name:t, location: location, genericArgs: nil, recurse: false)
             
-            if type != nil {try checkAccessLevel(name: t, id: type!, location: location)}
+            if type != nil {try _=checkAccessLevel(name: t, id: type!, location: location)}
             
             //print("found type: ",type," with decl:",type?.decl," finding \(n) in ", type?.decl?.declaredFuncs)
             
@@ -198,7 +198,7 @@ public class Scope: ASTBase, Identifiable {
         if var result=declaredFuncs[n] {
             //check result access level
             var r:[FunctionDeclaration]=[]
-            var hasGenericArgs:Bool=false
+            let hasGenericArgs:Bool=false
             for f in result {
                 //print("found func:",f.name," with params ",f.genericParameterClause)
 
@@ -284,7 +284,7 @@ public class Scope: ASTBase, Identifiable {
             n.removeFirst()
             let type=try findType(name:t, location: location, genericArgs: nil, recurse: false)
             
-            if type != nil {try checkAccessLevel(name: t, id: type!, location: location)}
+            if type != nil {try _=checkAccessLevel(name: t, id: type!, location: location)}
             
             //print("found type: ",type," with decl:",type?.decl)
             
@@ -293,7 +293,7 @@ public class Scope: ASTBase, Identifiable {
         
         if let result=declaredVars[n] {
             //check result access level
-            try checkAccessLevel(name: n, id: result, location: location)
+            try _=checkAccessLevel(name: n, id: result, location: location)
 
             return result
         }
@@ -316,7 +316,7 @@ public class Scope: ASTBase, Identifiable {
             n.removeFirst()
             let type=try findType(name:t, location: location, genericArgs: nil, recurse: false)
             
-            if type != nil {try checkAccessLevel(name: t, id: type!, location: location)}
+            if type != nil {try _=checkAccessLevel(name: t, id: type!, location: location)}
             
             //print("found type: ",type," with decl:",type?.decl)
             
@@ -325,7 +325,7 @@ public class Scope: ASTBase, Identifiable {
         
         if let result=declaredTypes[n] {
             //check result access level
-            try checkAccessLevel(name: n, id: result, location: location)
+            try _=checkAccessLevel(name: n, id: result, location: location)
 
             //if result has generic args, we must have parameters
             //print("found:",n)

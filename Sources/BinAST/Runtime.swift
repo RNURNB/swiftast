@@ -26,6 +26,7 @@ public enum TRuntimeSwiftType {
     case uint16
     case uint32
     case uint
+    case BigInt
 
     case float
     case double
@@ -74,6 +75,7 @@ public var int32_rt_type:RuntimeSwiftType=(.int32,RuntimeSwiftType_None)
 public var uint32_rt_type:RuntimeSwiftType=(.uint32,RuntimeSwiftType_None)
 public var int_rt_type:RuntimeSwiftType=(.int,RuntimeSwiftType_None)
 public var uint_rt_type:RuntimeSwiftType=(.uint,RuntimeSwiftType_None)
+public var BigInt_rt_type:RuntimeSwiftType=(.BigInt,RuntimeSwiftType_None)
 
 //Optional Integer Types
 public var oint8_rt_type:RuntimeSwiftType=(.int8,RuntimeSwiftType_Optional)
@@ -84,6 +86,7 @@ public var oint32_rt_type:RuntimeSwiftType=(.int32,RuntimeSwiftType_Optional)
 public var ouint32_rt_type:RuntimeSwiftType=(.uint32,RuntimeSwiftType_Optional)
 public var oint_rt_type:RuntimeSwiftType=(.int,RuntimeSwiftType_Optional)
 public var ouint_rt_type:RuntimeSwiftType=(.uint,RuntimeSwiftType_Optional)
+public var oBigInt_rt_type:RuntimeSwiftType=(.BigInt,RuntimeSwiftType_Optional)
 
 //Floating Point Types
 public var float_rt_type:RuntimeSwiftType=(.float,RuntimeSwiftType_None)
@@ -205,6 +208,9 @@ public struct RuntimeValue {
                 case .uint:
                     let z:UInt?=unwrap(value)
                     return z==nil
+                case .BigInt:
+                    let z:Any?=unwrap(value)
+                    return z==nil
 
                 case .float:
                     let z:Float?=unwrap(value)
@@ -249,7 +255,7 @@ public struct RuntimeValue {
                 case .`protocol`:
                     return false
                 case .dictionary:
-                    let z:Any=unwrap(value)
+                    let z:Any?=unwrap(value)
                     return z==nil
 
                 case .variable:
@@ -291,6 +297,7 @@ public struct RuntimeValue {
     public init(uint32: UInt32) {type=uint32_rt_type; value=uint32}
     public init(int: Int) {type=int_rt_type; value=int}
     public init(uint: UInt) {type=uint_rt_type; value=uint}
+    public init(bigint: Any) {type=BigInt_rt_type; value=bigint}
 
     public init(float: Float) {type=float_rt_type; value=float}
     public init(double: Double) {type=double_rt_type; value=double}
@@ -365,29 +372,30 @@ public struct RuntimeValue {
     }
 
     //Optional values
-    public init(int8: Int8?) {type=oint8_rt_type; value=int8}
-    public init(uint8: UInt8?) {type=ouint8_rt_type; value=uint8}
-    public init(int16: Int16?) {type=oint16_rt_type; value=int16}
-    public init(uint16: UInt16?) {type=ouint8_rt_type; value=uint16}
-    public init(int32: Int32?) {type=oint32_rt_type; value=int32}
-    public init(uint32: UInt32?) {type=ouint32_rt_type; value=uint32}
-    public init(int: Int?) {type=oint_rt_type; value=int}
-    public init(uint: UInt?) {type=ouint_rt_type; value=uint}
+    public init(int8: Int8?) {type=oint8_rt_type; value=int8 as Any}
+    public init(uint8: UInt8?) {type=ouint8_rt_type; value=uint8 as Any}
+    public init(int16: Int16?) {type=oint16_rt_type; value=int16 as Any}
+    public init(uint16: UInt16?) {type=ouint8_rt_type; value=uint16 as Any}
+    public init(int32: Int32?) {type=oint32_rt_type; value=int32 as Any}
+    public init(uint32: UInt32?) {type=ouint32_rt_type; value=uint32 as Any}
+    public init(int: Int?) {type=oint_rt_type; value=int as Any}
+    public init(uint: UInt?) {type=ouint_rt_type; value=uint as Any}
+    public init(bigint: Any?) {type=oBigInt_rt_type; value=bigint as Any}
 
-    public init(float: Float?) {type=ofloat_rt_type; value=float}
-    public init(double: Double?) {type=odouble_rt_type; value=double}
+    public init(float: Float?) {type=ofloat_rt_type; value=float as Any}
+    public init(double: Double?) {type=odouble_rt_type; value=double as Any}
 
-    public init(bool: Bool?) {type=obool_rt_type; value=bool}
+    public init(bool: Bool?) {type=obool_rt_type; value=bool as Any}
 
-    public init(character: Character?) {type=ocharacter_rt_type; value=character}
+    public init(character: Character?) {type=ocharacter_rt_type; value=character as Any}
 
-    public init(string: String?) {type=ostring_rt_type; value=string}
+    public init(string: String?) {type=ostring_rt_type; value=string as Any}
 
-    public init(object: AnyObject?) {type=oclass_rt_type; value=object}
+    public init(object: AnyObject?) {type=oclass_rt_type; value=object as Any}
     
-    public init(`struct` s: Any?) {type=ostruct_rt_type; value=s}
+    public init(`struct` s: Any?) {type=ostruct_rt_type; value=s as Any}
     
-    public init(`enum` e: Any?) {type=oenum_rt_type; value=e}
+    public init(`enum` e: Any?) {type=oenum_rt_type; value=e as Any}
 }
 
 public struct MemoryAddress<T>: CustomStringConvertible {
@@ -408,7 +416,7 @@ public struct MemoryAddress<T>: CustomStringConvertible {
 public extension MemoryAddress where T: AnyObject {
 
     // for classes
-    public init(of classInstance: T) {
+    init(of classInstance: T) {
         intValue = unsafeBitCast(classInstance, to: UInt64.self)
         // or      Int(bitPattern: Unmanaged<T>.passUnretained(classInstance).toOpaque())
     }
@@ -424,7 +432,7 @@ public func symbolAdressOf(name: String) -> UInt64 {
         //print("global process got")
         //delete prefix _ from name
         if name.first=="_" {
-            var pname=String(name.dropFirst())
+            let pname=String(name.dropFirst())
             let sym = dlsym(globalProcessHandle, pname)
             if sym != nil {
                 print("resolved ",name," to ",sym)
