@@ -25,9 +25,9 @@ let products: [Product] = [
 
 // We try to avoid adding new dependencies because… oh so many reasons!
 // Tbh. I’m still not sure if we can trust this ‘apple’ person…
-/*let dependencies: [Package.Dependency] = [
-  .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.4.0"))
-]*/
+let dependencies: [Package.Dependency] = [
+  //.package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.4.0"))
+]
 
 // ===============
 // === Targets ===
