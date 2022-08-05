@@ -348,6 +348,7 @@ public struct RuntimeValue {
     public init(code: AnyObject) {type=code_rt_type; value=code}
     public init(tuple: Any) {type=tuple_rt_type; value=tuple}
     public init(bytes: Any) {type=bytes_rt_type; value=bytes}
+    public init(dict: Any) {type=dictionary_rt_type; value=dict}
 
     public init(variable: RuntimeVariable) {type=variable_rt_type; value=variable}
     public init(variableList: [RuntimeVariable]) {type=variablelist_rt_type; value=variableList}
@@ -434,6 +435,8 @@ public struct RuntimeValue {
     public init(`enum` e: Any?) {type=oenum_rt_type; value=e as Any}
     
     public init(tuple: Any?) {type=otuple_rt_type; value=tuple as Any}
+    
+    public init(dict: Any?) {type=odictionary_rt_type; value=dict as Any}
 }
 
 public struct MemoryAddress<T>: CustomStringConvertible {
