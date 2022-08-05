@@ -3,7 +3,7 @@ import Foundation
 import Swift
 
 //hack to be able to handle nil as Any
-let NilAny: Any = Optional<Any>.none as Any
+public let NilAny: Any = Optional<Any>.none as Any
 
 //so we can detect if Any contains a nil with type(of:var) is OptionalProtocol.Type
 public protocol OptionalProtocol {}
