@@ -30,6 +30,7 @@ public enum TRuntimeSwiftType {
 
     case float
     case double
+    case complex
 
     case character
     case string
@@ -58,6 +59,7 @@ public enum TRuntimeSwiftType {
     case typeList
     
         case cell
+    case ellipsis
 }
 
 public let RuntimeSwiftType_None:UInt8 = 0
@@ -91,10 +93,12 @@ public var oBigInt_rt_type:RuntimeSwiftType=(.BigInt,RuntimeSwiftType_Optional)
 //Floating Point Types
 public var float_rt_type:RuntimeSwiftType=(.float,RuntimeSwiftType_None)
 public var double_rt_type:RuntimeSwiftType=(.double,RuntimeSwiftType_None)
+public var complex_rt_type:RuntimeSwiftType=(.complex,RuntimeSwiftType_None)
 
 //Optional Floating Point Types
 public var ofloat_rt_type:RuntimeSwiftType=(.float,RuntimeSwiftType_Optional)
 public var odouble_rt_type:RuntimeSwiftType=(.double,RuntimeSwiftType_Optional)
+public var ocomplex_rt_type:RuntimeSwiftType=(.complex,RuntimeSwiftType_Optional)
 
 public var bool_rt_type:RuntimeSwiftType=(.bool,RuntimeSwiftType_None)
 public var obool_rt_type:RuntimeSwiftType=(.bool,RuntimeSwiftType_Optional)
@@ -104,6 +108,8 @@ public var ocharacter_rt_type:RuntimeSwiftType=(.character,RuntimeSwiftType_Opti
 
 public var void_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None)
 
+public var cell_rt_type:RuntimeSwiftType=(.cell,RuntimeSwiftType_None)
+public var ellipsis_rt_type:RuntimeSwiftType=(.ellipsis,RuntimeSwiftType_None)
 public var any_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_None)
 
 public var nil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None)
@@ -211,6 +217,9 @@ public struct RuntimeValue {
                 case .BigInt:
                     let z:Any?=unwrap(value)
                     return z==nil
+                case .complex:
+                    let z:Any?=unwrap(value)
+                    return z==nil
 
                 case .float:
                     let z:Float?=unwrap(value)
@@ -278,6 +287,9 @@ public struct RuntimeValue {
                     
                 case .cell:
                     return false //??
+                    
+                case .ellipsis:
+                    return false //?
             }
         }
         return false
@@ -301,6 +313,7 @@ public struct RuntimeValue {
 
     public init(float: Float) {type=float_rt_type; value=float}
     public init(double: Double) {type=double_rt_type; value=double}
+    public init(complex: Any) {type=complex_rt_type; value=complex}
 
     public init(bool: Bool) {type=bool_rt_type; value=bool}
 
@@ -313,6 +326,9 @@ public struct RuntimeValue {
     public init(`struct` s: Any) {type=struct_rt_type; value=s}
     
     public init(`enum` e: Any) {type=enum_rt_type; value=e}
+    
+    public init(cell: Any) {type=cell_rt_type; value=cell}
+    public init(ellipsis: Any) {type=ellipsis_rt_type; value=NilAny}
 
     public init(variable: RuntimeVariable) {type=variable_rt_type; value=variable}
     public init(variableList: [RuntimeVariable]) {type=variablelist_rt_type; value=variableList}
@@ -384,6 +400,7 @@ public struct RuntimeValue {
 
     public init(float: Float?) {type=ofloat_rt_type; value=float as Any}
     public init(double: Double?) {type=odouble_rt_type; value=double as Any}
+    public init(complex: Any?) {type=ocomplex_rt_type; value=complex}
 
     public init(bool: Bool?) {type=obool_rt_type; value=bool as Any}
 
