@@ -171,9 +171,21 @@ public protocol RuntimeType {
 
 }
 
-public struct RuntimeValue {
+public struct RuntimeValue:Equatable {
     public var value:Any
     public var type:RuntimeSwiftType
+    
+    public static func == (lhs: RuntimeValue, rhs: RuntimeValue) -> Bool {
+        if lhs.isNil && rhs.isNil {return true}
+        
+        if lhs.type != rhs.type {return false}
+        
+        if let e1=lhs.value as? AnyHashable, let e2=rhs.value as? AnyHashable {
+            return e1==e2
+        }
+        
+        return false
+    }    
 
     public var isOptional:Bool {
         if type.0 == .nil {return false} //nil itself is not optional
