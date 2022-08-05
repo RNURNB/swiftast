@@ -63,6 +63,7 @@ public enum TRuntimeSwiftType {
     case code
     case tuple
     case bytes
+    case array
 }
 
 public let RuntimeSwiftType_None:UInt8 = 0
@@ -115,7 +116,8 @@ public var cell_rt_type:RuntimeSwiftType=(.cell,RuntimeSwiftType_None)
 public var ellipsis_rt_type:RuntimeSwiftType=(.ellipsis,RuntimeSwiftType_None)
 public var code_rt_type:RuntimeSwiftType=(.code,RuntimeSwiftType_None)
 public var tuple_rt_type:RuntimeSwiftType=(.tuple,RuntimeSwiftType_None)
-public var bytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_None)
+public var bytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_None)
+public var array_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_None)
 public var any_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_None)
 
 public var nil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None)
@@ -152,6 +154,9 @@ public var odictionary_rt_type:RuntimeSwiftType=(.dictionary,RuntimeSwiftType_Op
 
 public var otuple_rt_type:RuntimeSwiftType=(.tuple,RuntimeSwiftType_Optional)
 public var oany_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_Optional)
+
+public var obytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_Optional)
+public var oarray_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_Optional)
 
 public var runtimeNilValue=RuntimeValue(literalNil:nil)
 
@@ -314,10 +319,16 @@ public struct RuntimeValue:Equatable {
                     return false //??
                     
                 case .tuple:
-                    return false //?
+                    let z:Any?=unwrap(value)
+                    return z==nil
                     
                 case .bytes:
-                    return false //?
+                    let z:Data?=unwrap(value)
+                    return z==nil
+                    
+                case .array:
+                    let z:[Any]?=unwrap(value)
+                    return z==nil
             }
         }
         return false
@@ -359,8 +370,9 @@ public struct RuntimeValue:Equatable {
     public init(ellipsis: Any) {type=ellipsis_rt_type; value=NilAny}
     public init(code: AnyObject) {type=code_rt_type; value=code}
     public init(tuple: Any) {type=tuple_rt_type; value=tuple}
-    public init(bytes: Any) {type=bytes_rt_type; value=bytes}
+    public init(bytes: Data) {type=bytes_rt_type; value=bytes}
     public init(dict: Any) {type=dictionary_rt_type; value=dict}
+    public init(array: [Any]) {type=array_rt_type; value=array}
 
     public init(variable: RuntimeVariable) {type=variable_rt_type; value=variable}
     public init(variableList: [RuntimeVariable]) {type=variablelist_rt_type; value=variableList}
@@ -449,6 +461,10 @@ public struct RuntimeValue:Equatable {
     public init(tuple: Any?) {type=otuple_rt_type; value=tuple as Any}
     
     public init(dict: Any?) {type=odictionary_rt_type; value=dict as Any}
+    
+    public init(bytes: Data?) {type=obytes_rt_type; value=bytes as Any}
+    
+    public init(array: [Any]?) {type=oarray_rt_type; value=array as Any}
 }
 
 public struct MemoryAddress<T>: CustomStringConvertible {
