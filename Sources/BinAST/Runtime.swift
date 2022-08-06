@@ -67,6 +67,7 @@ public enum TRuntimeSwiftType {
     case set
     case exception
     case list
+    case key
     case keyvalue
 }
 
@@ -125,6 +126,7 @@ public var array_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_None)
 public var set_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_None)
 public var exception_rt_type:RuntimeSwiftType=(.exception,RuntimeSwiftType_None)
 public var list_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_None)
+public var key_rt_type:RuntimeSwiftType=(.key,RuntimeSwiftType_None)
 public var keyvalue_rt_type:RuntimeSwiftType=(.keyvalue,RuntimeSwiftType_None)
 public var any_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_None)
 
@@ -359,6 +361,9 @@ public struct RuntimeValue:Equatable, Hashable {
                 case .code:
                     return false //??
                     
+                case .key:
+                    return false //??
+                    
                 case .keyvalue:
                     return false //??
                     
@@ -423,7 +428,7 @@ public struct RuntimeValue:Equatable, Hashable {
     
     public init(cell: AnyObject/*VMCell*/) {type=cell_rt_type; value=cell}
     public init(ellipsis: AnyObject/*VMEllipsis*/) {type=ellipsis_rt_type; value=ellipsis}
-    public init(code: AnyObject/*VMCode*/) {type=code_rt_type; value=code}
+    public init(code: AnyObject/*CodeObject*/) {type=code_rt_type; value=code}
     public init(tuple: AnyObject/*VMTuple*/) {type=tuple_rt_type; value=tuple}
     public init(bytes: Data) {type=bytes_rt_type; value=bytes}
     public init(dict: AnyObject/*VMDict*/) {type=dictionary_rt_type; value=dict}
@@ -431,6 +436,7 @@ public struct RuntimeValue:Equatable, Hashable {
     public init(set: AnyObject/*VMSet*/) {type=set_rt_type; value=set}
     public init(exception: AnyObject/*VMBaseException*/) {type=exception_rt_type; value=exception}
     public init(list: AnyObject/*VMList*/) {type=list_rt_type; value=list}
+    public init(key: Any/*Key*/) {type=key_rt_type; value=key}
     public init(keyvalue: Any/*KeyValue*/) {type=keyvalue_rt_type; value=keyvalue}
 
     public init(variable: RuntimeVariable) {type=variable_rt_type; value=variable}
