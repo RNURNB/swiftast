@@ -67,6 +67,7 @@ public enum TRuntimeSwiftType {
     case set
     case exception
     case list
+    case keyvalue
 }
 
 public let RuntimeSwiftType_None:UInt8 = 0
@@ -123,7 +124,8 @@ public var bytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_None)
 public var array_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_None)
 public var set_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_None)
 public var exception_rt_type:RuntimeSwiftType=(.exception,RuntimeSwiftType_None)
-public var list_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_None)
+public var list_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_None)
+public var keyvalue_rt_type:RuntimeSwiftType=(.keyvalue,RuntimeSwiftType_None)
 public var any_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_None)
 
 public var nil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None)
@@ -344,6 +346,7 @@ public struct RuntimeValue:Equatable, Hashable {
 
                 case .type:
                     return false //??
+                    
                 case .typeList:
                     return false //??
                     
@@ -354,6 +357,9 @@ public struct RuntimeValue:Equatable, Hashable {
                     return false //?
                     
                 case .code:
+                    return false //??
+                    
+                case .keyvalue:
                     return false //??
                     
                 case .exception:
@@ -425,6 +431,7 @@ public struct RuntimeValue:Equatable, Hashable {
     public init(set: AnyObject/*VMSet*/) {type=set_rt_type; value=set}
     public init(exception: AnyObject/*VMBaseException*/) {type=exception_rt_type; value=exception}
     public init(list: AnyObject/*VMList*/) {type=list_rt_type; value=list}
+    public init(keyvalue: Any/*KeyValue*/) {type=keyvalue_rt_type; value=keyvalue}
 
     public init(variable: RuntimeVariable) {type=variable_rt_type; value=variable}
     public init(variableList: [RuntimeVariable]) {type=variablelist_rt_type; value=variableList}
