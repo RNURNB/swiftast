@@ -184,7 +184,7 @@ public protocol RuntimeType {
 
 }
 
-public struct RuntimeValue:Equatable {
+public struct RuntimeValue:Equatable, Hashable {
     public var value:Any
     public var type:RuntimeSwiftType
     
@@ -198,6 +198,36 @@ public struct RuntimeValue:Equatable {
         }
         
         return false
+    }
+    
+        public func hash(into hasher: inout Hasher) {
+        hasher.combine(type.0)
+        hasher.combine(type.1)
+        if isBinaryInteger(value) {
+                if let v=value as? Int8 {hasher.combine(v)}
+                else if let v=value as? Int16 {hasher.combine(v)}
+                else if let v=value as? Int32 {hasher.combine(v)}
+                else if let v=value as? Int {hasher.combine(v)}
+                else if let v=value as? Int64 {hasher.combine(v)}
+                else if let v=value as? UInt8 {hasher.combine(v)}
+                else if let v=value as? UInt16 {hasher.combine(v)}
+                else if let v=value as? UInt32 {hasher.combine(v)}
+                else if let v=value as? UInt {hasher.combine(v)}
+                else if let v=value as? UInt64 {hasher.combine(v)}
+                else if let h=value as? AnyHashable {
+                    hasher.combine(h)
+                }
+        }
+        else if let v=value as? String {hasher.combine(v)}
+        else if let v=value as? Float {hasher.combine(v)}
+        else if let v=value as? Double {hasher.combine(v)}
+        else if let v=value as? Bool {hasher.combine(v)}
+        else if let v=value as? Character {hasher.combine(v)}
+        else if let v=value as? Data {hasher.combine(v)}
+        else if let h=value as? AnyHashable {
+            hasher.combine(h)
+        }
+        else {hasher.combine("\(value)")} //last ressort
     }    
 
     public var isOptional:Bool {
