@@ -66,6 +66,7 @@ public enum TRuntimeSwiftType {
     case array
     case set
     case exception
+    case list
 }
 
 public let RuntimeSwiftType_None:UInt8 = 0
@@ -121,7 +122,8 @@ public var tuple_rt_type:RuntimeSwiftType=(.tuple,RuntimeSwiftType_None)
 public var bytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_None)
 public var array_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_None)
 public var set_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_None)
-public var exception_rt_type:RuntimeSwiftType=(.exception,RuntimeSwiftType_None)
+public var exception_rt_type:RuntimeSwiftType=(.exception,RuntimeSwiftType_None)
+public var list_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_None)
 public var any_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_None)
 
 public var nil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None)
@@ -161,7 +163,8 @@ public var oany_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_Optional)
 
 public var obytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_Optional)
 public var oarray_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_Optional)
-public var oset_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_Optional)
+public var oset_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_Optional)
+public var olist_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_Optional)
 
 public var runtimeNilValue=RuntimeValue(literalNil:nil)
 
@@ -293,7 +296,7 @@ public struct RuntimeValue:Equatable {
                 case .`protocol`:
                     return false
                 case .dictionary:
-                    let z:Any?=unwrap(value)
+                    let z:AnyObject?=unwrap(value)
                     return z==nil
 
                 case .variable:
@@ -327,11 +330,11 @@ public struct RuntimeValue:Equatable {
                     return false //??
                     
                 case .tuple:
-                    let z:Any?=unwrap(value)
+                    let z:AnyObject?=unwrap(value)
                     return z==nil
                     
                 case .set:
-                    let z:Any?=unwrap(value)
+                    let z:AnyObject?=unwrap(value)
                     return z==nil
                     
                 case .bytes:
@@ -340,6 +343,10 @@ public struct RuntimeValue:Equatable {
                     
                 case .array:
                     let z:[Any]?=unwrap(value)
+                    return z==nil
+                    
+                case .list:
+                    let z:AnyObject?=unwrap(value)
                     return z==nil
             }
         }
@@ -387,6 +394,7 @@ public struct RuntimeValue:Equatable {
     public init(array: [Any]) {type=array_rt_type; value=array}
     public init(set: AnyObject/*VMSet*/) {type=set_rt_type; value=set}
     public init(exception: AnyObject/*VMBaseException*/) {type=exception_rt_type; value=exception}
+    public init(list: AnyObject/*VMList*/) {type=list_rt_type; value=list}
 
     public init(variable: RuntimeVariable) {type=variable_rt_type; value=variable}
     public init(variableList: [RuntimeVariable]) {type=variablelist_rt_type; value=variableList}
@@ -476,15 +484,17 @@ public struct RuntimeValue:Equatable {
     
     public init(`enum` e: Any?) {type=oenum_rt_type; value=e as Any}
     
-    public init(tuple: Any?) {type=otuple_rt_type; value=tuple as Any}
+    public init(tuple: AnyObject?) {type=otuple_rt_type; value=tuple as Any}
     
-    public init(dict: Any?) {type=odictionary_rt_type; value=dict as Any}
+    public init(dict: AnyObject?) {type=odictionary_rt_type; value=dict as Any}
     
     public init(bytes: Data?) {type=obytes_rt_type; value=bytes as Any}
     
     public init(array: [Any]?) {type=oarray_rt_type; value=array as Any}
     
-    public init(set: Any?) {type=oset_rt_type; value=set as Any}
+    public init(set: AnyObject?) {type=oset_rt_type; value=set as Any}
+    
+    public init(list: AnyObject?) {type=olist_rt_type; value=list as Any}
 }
 
 public struct MemoryAddress<T>: CustomStringConvertible {
