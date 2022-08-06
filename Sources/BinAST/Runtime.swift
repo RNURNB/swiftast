@@ -65,6 +65,7 @@ public enum TRuntimeSwiftType {
     case bytes
     case array
     case set
+    case exception
 }
 
 public let RuntimeSwiftType_None:UInt8 = 0
@@ -119,7 +120,8 @@ public var code_rt_type:RuntimeSwiftType=(.code,RuntimeSwiftType_None)
 public var tuple_rt_type:RuntimeSwiftType=(.tuple,RuntimeSwiftType_None)
 public var bytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_None)
 public var array_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_None)
-public var set_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_None)
+public var set_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_None)
+public var exception_rt_type:RuntimeSwiftType=(.exception,RuntimeSwiftType_None)
 public var any_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_None)
 
 public var nil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None)
@@ -321,6 +323,9 @@ public struct RuntimeValue:Equatable {
                 case .code:
                     return false //??
                     
+                case .exception:
+                    return false //??
+                    
                 case .tuple:
                     let z:Any?=unwrap(value)
                     return z==nil
@@ -373,14 +378,15 @@ public struct RuntimeValue:Equatable {
     
     public init(`enum` e: Any) {type=enum_rt_type; value=e}
     
-    public init(cell: Any) {type=cell_rt_type; value=cell}
-    public init(ellipsis: Any) {type=ellipsis_rt_type; value=NilAny}
-    public init(code: AnyObject) {type=code_rt_type; value=code}
-    public init(tuple: Any) {type=tuple_rt_type; value=tuple}
+    public init(cell: AnyObject/*VMCell*/) {type=cell_rt_type; value=cell}
+    public init(ellipsis: AnyObject/*VMEllipsis*/) {type=ellipsis_rt_type; value=ellipsis}
+    public init(code: AnyObject/*VMCode*/) {type=code_rt_type; value=code}
+    public init(tuple: AnyObject/*VMTuple*/) {type=tuple_rt_type; value=tuple}
     public init(bytes: Data) {type=bytes_rt_type; value=bytes}
-    public init(dict: Any) {type=dictionary_rt_type; value=dict}
+    public init(dict: AnyObject/*VMDict*/) {type=dictionary_rt_type; value=dict}
     public init(array: [Any]) {type=array_rt_type; value=array}
-    public init(set: Any) {type=set_rt_type; value=set}
+    public init(set: AnyObject/*VMSet*/) {type=set_rt_type; value=set}
+    public init(exception: AnyObject/*VMBaseException*/) {type=exception_rt_type; value=exception}
 
     public init(variable: RuntimeVariable) {type=variable_rt_type; value=variable}
     public init(variableList: [RuntimeVariable]) {type=variablelist_rt_type; value=variableList}
