@@ -69,6 +69,9 @@ public enum TRuntimeSwiftType {
     case list
     case key
     case keyvalue
+    case frozenset
+    case setelement
+    case slice
 }
 
 public let RuntimeSwiftType_None:UInt8 = 0
@@ -124,10 +127,13 @@ public var tuple_rt_type:RuntimeSwiftType=(.tuple,RuntimeSwiftType_None)
 public var bytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_None)
 public var array_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_None)
 public var set_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_None)
+public var frozenset_rt_type:RuntimeSwiftType=(.frozenset,RuntimeSwiftType_None)
+public var setelement_rt_type:RuntimeSwiftType=(.setelement,RuntimeSwiftType_None)
 public var exception_rt_type:RuntimeSwiftType=(.exception,RuntimeSwiftType_None)
 public var list_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_None)
 public var key_rt_type:RuntimeSwiftType=(.key,RuntimeSwiftType_None)
-public var keyvalue_rt_type:RuntimeSwiftType=(.keyvalue,RuntimeSwiftType_None)
+public var keyvalue_rt_type:RuntimeSwiftType=(.keyvalue,RuntimeSwiftType_None)
+public var slice_rt_type:RuntimeSwiftType=(.slice,RuntimeSwiftType_None)
 public var any_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_None)
 
 public var nil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None)
@@ -168,6 +174,9 @@ public var oany_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_Optional)
 public var obytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_Optional)
 public var oarray_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_Optional)
 public var oset_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_Optional)
+public var osetelement_rt_type:RuntimeSwiftType=(.setelement,RuntimeSwiftType_Optional)
+public var ofrozenset_rt_type:RuntimeSwiftType=(.frozenset,RuntimeSwiftType_Optional)
+public var oslice_rt_type:RuntimeSwiftType=(.slice,RuntimeSwiftType_Optional)
 public var olist_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_Optional)
 
 public var runtimeNilValue=RuntimeValue(literalNil:nil)
@@ -367,6 +376,9 @@ public struct RuntimeValue:Equatable, Hashable {
                 case .keyvalue:
                     return false //??
                     
+                case .setelement:
+                    return false //??
+                    
                 case .exception:
                     return false //??
                     
@@ -374,7 +386,15 @@ public struct RuntimeValue:Equatable, Hashable {
                     let z:AnyObject?=unwrap(value)
                     return z==nil
                     
+                case .slice:
+                    let z:AnyObject?=unwrap(value)
+                    return z==nil
+                    
                 case .set:
+                    let z:AnyObject?=unwrap(value)
+                    return z==nil
+                    
+                case .frozenset:
                     let z:AnyObject?=unwrap(value)
                     return z==nil
                     
@@ -434,6 +454,9 @@ public struct RuntimeValue:Equatable, Hashable {
     public init(dict: AnyObject/*VMDict*/) {type=dictionary_rt_type; value=dict}
     public init(array: [Any]) {type=array_rt_type; value=array}
     public init(set: AnyObject/*VMSet*/) {type=set_rt_type; value=set}
+    public init(frozenset: AnyObject/*VMFrozenSet*/) {type=frozenset_rt_type; value=frozenset}
+    public init(setelement: Any/**/) {type=setelement_rt_type; value=setelement}
+    public init(slice: Any/*VMSlice*/) {type=slice_rt_type; value=slice}
     public init(exception: AnyObject/*VMBaseException*/) {type=exception_rt_type; value=exception}
     public init(list: AnyObject/*VMList*/) {type=list_rt_type; value=list}
     public init(key: Any/*Key*/) {type=key_rt_type; value=key}
@@ -536,6 +559,12 @@ public struct RuntimeValue:Equatable, Hashable {
     public init(array: [Any]?) {type=oarray_rt_type; value=array as Any}
     
     public init(set: AnyObject?) {type=oset_rt_type; value=set as Any}
+    
+    public init(frozenset: AnyObject?) {type=ofrozenset_rt_type; value=frozenset as Any}
+    
+    public init(setelement: Any?) {type=osetelement_rt_type; value=setelement as Any}
+    
+    public init(slice: Any?) {type=oslice_rt_type; value=slice as Any}
     
     public init(list: AnyObject?) {type=olist_rt_type; value=list as Any}
 }
