@@ -3688,16 +3688,16 @@ class Literal: ASTBase {
                 value = runtimeNilValue
             case .boolean(let b):
                 value=RuntimeValue(bool:b)
-                value!.type=RuntimeSwiftType(.bool,RuntimeSwiftType_Literal)
+                value!.type=RuntimeSwiftType(.bool,RuntimeSwiftType_Literal,nil)
             case .integer(let i, _):
                 value=RuntimeValue(int:i)
-                value!.type=RuntimeSwiftType(.int,RuntimeSwiftType_Literal)
+                value!.type=RuntimeSwiftType(.int,RuntimeSwiftType_Literal,nil)
             case .floatingPoint(let d, _):
                 value=RuntimeValue(double:d)
-                value!.type=RuntimeSwiftType(.double,RuntimeSwiftType_Literal)
+                value!.type=RuntimeSwiftType(.double,RuntimeSwiftType_Literal,nil)
             case .staticString(let s, _):
                 value=RuntimeValue(string:s)
-                value!.type=RuntimeSwiftType(.string,RuntimeSwiftType_Literal)
+                value!.type=RuntimeSwiftType(.string,RuntimeSwiftType_Literal,nil)
             case .interpolatedString(let e, _):
                 //value = .literal(.interpolatedString(e))
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.internalError("todo interpolated string literal"), sourceLocatable: self.location)
