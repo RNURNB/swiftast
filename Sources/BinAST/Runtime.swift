@@ -194,6 +194,41 @@ public protocol RuntimeFunctionDeclaration {
 }
 
 public protocol RuntimeType {
+    //binary
+    func __add__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __sub__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __mul__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __div__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __matmul__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __pow__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __floordiv__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __mod__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __lshift__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __rshift__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __and__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __or__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __xor__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    
+    //inplace variants
+    func __iadd__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __isub__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __imul__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __idiv__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __imatmul__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __ipow__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __ifloordiv__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __imod__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __ilshift__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __irshift__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __iand__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __ior__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    func __ixor__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
+    
+    //unary
+    func __pos__(left: RuntimeValue) -> RuntimeValue? 
+    func __neg__(left: RuntimeValue) -> RuntimeValue?
+    func __not__(left: RuntimeValue) -> RuntimeValue? 
+    func __inv__(left: RuntimeValue) -> RuntimeValue?  
 }
 
 
