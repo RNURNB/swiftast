@@ -210,7 +210,7 @@ public var runtimeBinaryIntegerVMType: RuntimeBinaryIntegerVMType? = nil
 public struct RuntimeValue:Equatable, Hashable {
     public var value:Any
     public var type:RuntimeSwiftType
-    public var vmtype: RuntimeVMType
+    public var vmtype: RuntimeVMType?=nil
     
     public static func == (lhs: RuntimeValue, rhs: RuntimeValue) -> Bool {
         if lhs.isNil && rhs.isNil {return true}
