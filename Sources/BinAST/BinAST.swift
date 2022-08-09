@@ -433,7 +433,7 @@ extension String: AST {
 
     public func exec() throws -> Value {
         var v=RuntimeValue(string:self)
-        v.type=RuntimeSwiftType(.string,RuntimeSwiftType_Literal,nil)
+        v.type=RuntimeSwiftType(.string,RuntimeSwiftType_Literal)
         return v
     }
 
@@ -464,7 +464,7 @@ extension Bool: AST {
 
     public func exec() throws -> Value {
         var v=RuntimeValue(bool:self)
-        v.type=RuntimeSwiftType(.bool,RuntimeSwiftType_Literal,nil)
+        v.type=RuntimeSwiftType(.bool,RuntimeSwiftType_Literal)
         return v
     }
 
@@ -496,7 +496,7 @@ extension Int: AST {
 
     public func exec() throws -> Value {
         var v=RuntimeValue(int:self)
-        v.type=RuntimeSwiftType(.int,RuntimeSwiftType_Literal,nil)
+        v.type=RuntimeSwiftType(.int,RuntimeSwiftType_Literal)
         return v
     }
 
@@ -528,7 +528,7 @@ extension Double: AST {
 
     public func exec() throws -> Value {
         var v=RuntimeValue(double:self)
-        v.type=RuntimeSwiftType(.double,RuntimeSwiftType_Literal,nil)
+        v.type=RuntimeSwiftType(.double,RuntimeSwiftType_Literal)
         return v
     }
 
@@ -3688,16 +3688,16 @@ class Literal: ASTBase {
                 value = runtimeNilValue
             case .boolean(let b):
                 value=RuntimeValue(bool:b)
-                value!.type=RuntimeSwiftType(.bool,RuntimeSwiftType_Literal,nil)
+                value!.type=RuntimeSwiftType(.bool,RuntimeSwiftType_Literal)
             case .integer(let i, _):
                 value=RuntimeValue(int:i)
-                value!.type=RuntimeSwiftType(.int,RuntimeSwiftType_Literal,nil)
+                value!.type=RuntimeSwiftType(.int,RuntimeSwiftType_Literal)
             case .floatingPoint(let d, _):
                 value=RuntimeValue(double:d)
                 value!.type=RuntimeSwiftType(.double,RuntimeSwiftType_Literal,nil)
             case .staticString(let s, _):
                 value=RuntimeValue(string:s)
-                value!.type=RuntimeSwiftType(.string,RuntimeSwiftType_Literal,nil)
+                value!.type=RuntimeSwiftType(.string,RuntimeSwiftType_Literal)
             case .interpolatedString(let e, _):
                 //value = .literal(.interpolatedString(e))
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.internalError("todo interpolated string literal"), sourceLocatable: self.location)
