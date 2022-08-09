@@ -216,6 +216,18 @@ public struct RuntimeValue:Equatable, Hashable {
         return false
     }
     
+    public static func != (lhs: RuntimeValue, rhs: RuntimeValue) -> Bool {
+        if lhs.isNil && rhs.isNil {return false}
+        
+        if lhs.type != rhs.type {return true}
+        
+        if let e1=lhs.value as? AnyHashable, let e2=rhs.value as? AnyHashable {
+            return e1!=e2
+        }
+        
+        return true
+    }
+    
         public func hash(into hasher: inout Hasher) {
         hasher.combine(type.0)
         hasher.combine(type.1)

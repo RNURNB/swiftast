@@ -464,7 +464,7 @@ extension Bool: AST {
 
     public func exec() throws -> Value {
         var v=RuntimeValue(bool:self)
-        v.type=RuntimeSwiftType(.bool,RuntimeSwiftType_Literal)
+        v.type=RuntimeSwiftType(.bool,RuntimeSwiftType_Literal,nil)
         return v
     }
 
@@ -500,7 +500,7 @@ extension Int: AST {
         return v
     }
 
-    public func getType() -> ASTType {return IntType}
+    public func getType() -> ASTType {return IntType,nil}
 }
 
 extension Double: AST {
@@ -528,7 +528,7 @@ extension Double: AST {
 
     public func exec() throws -> Value {
         var v=RuntimeValue(double:self)
-        v.type=RuntimeSwiftType(.double,RuntimeSwiftType_Literal)
+        v.type=RuntimeSwiftType(.double,RuntimeSwiftType_Literal,nil)
         return v
     }
 
