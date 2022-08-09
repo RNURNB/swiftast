@@ -86,7 +86,7 @@ public var int8_rt_type:RuntimeSwiftType=(.int8,RuntimeSwiftType_None)
 public var uint8_rt_type:RuntimeSwiftType=(.uint8,RuntimeSwiftType_None)
 public var int16_rt_type:RuntimeSwiftType=(.int16,RuntimeSwiftType_None)
 public var uint16_rt_type:RuntimeSwiftType=(.uint16,RuntimeSwiftType_None)
-public var int32_rt_type:RuntimeSwiftType=(.int32,RuntimeSwiftType_None
+public var int32_rt_type:RuntimeSwiftType=(.int32,RuntimeSwiftType_None)
 public var uint32_rt_type:RuntimeSwiftType=(.uint32,RuntimeSwiftType_None)
 public var int_rt_type:RuntimeSwiftType=(.int,RuntimeSwiftType_None)
 public var uint_rt_type:RuntimeSwiftType=(.uint,RuntimeSwiftType_None)
@@ -222,18 +222,6 @@ public struct RuntimeValue:Equatable, Hashable {
         }
         
         return false
-    }
-    
-    public static func != (lhs: RuntimeValue, rhs: RuntimeValue) -> Bool {
-        if lhs.isNil && rhs.isNil {return false}
-        
-        if lhs.type != rhs.type {return true}
-        
-        if let e1=lhs.value as? AnyHashable, let e2=rhs.value as? AnyHashable {
-            return e1!=e2
-        }
-        
-        return true
     }
     
         public func hash(into hasher: inout Hasher) {
