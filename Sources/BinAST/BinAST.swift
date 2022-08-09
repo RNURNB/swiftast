@@ -496,7 +496,7 @@ extension Int: AST {
 
     public func exec() throws -> Value {
         var v=RuntimeValue(int:self)
-        v.type=RuntimeSwiftType(.int,RuntimeSwiftType_Literal)
+        v.type=RuntimeSwiftType(.int,RuntimeSwiftType_Literal,nil)
         return v
     }
 
