@@ -201,6 +201,11 @@ public protocol RuntimeVMType {
     func add(lhs: RuntimeValue, rhs: RuntimeValue) -> RuntimeValue?
 }
 
+public protocol RuntimeBinaryIntegerVMType: RuntimeVMType {
+}
+
+publuc var runtimeBinaryIntegerVMType: RuntimeBinaryIntegerVMType? = nil
+
 
 public struct RuntimeValue:Equatable, Hashable {
     public var value:Any

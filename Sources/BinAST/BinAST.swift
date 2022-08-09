@@ -3694,7 +3694,7 @@ class Literal: ASTBase {
                 value!.type=RuntimeSwiftType(.int,RuntimeSwiftType_Literal)
             case .floatingPoint(let d, _):
                 value=RuntimeValue(double:d)
-                value!.type=RuntimeSwiftType(.double,RuntimeSwiftType_Literal,nil)
+                value!.type=RuntimeSwiftType(.double,RuntimeSwiftType_Literal)
             case .staticString(let s, _):
                 value=RuntimeValue(string:s)
                 value!.type=RuntimeSwiftType(.string,RuntimeSwiftType_Literal)
