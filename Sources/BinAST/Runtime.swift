@@ -194,6 +194,11 @@ public protocol RuntimeFunctionDeclaration {
 }
 
 public protocol RuntimeType {
+    
+}
+
+
+public protocol RuntimeVMType {
     //binary
     func __add__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
     func __sub__(left: RuntimeValue, right: RuntimeValue) -> RuntimeValue? 
@@ -229,11 +234,6 @@ public protocol RuntimeType {
     func __neg__(left: RuntimeValue) -> RuntimeValue?
     func __not__(left: RuntimeValue) -> RuntimeValue? 
     func __inv__(left: RuntimeValue) -> RuntimeValue?  
-}
-
-
-public protocol RuntimeVMType {
-    func add(lhs: RuntimeValue, rhs: RuntimeValue) -> RuntimeValue?
 }
 
 public protocol RuntimeIntegerVMType: RuntimeVMType {
