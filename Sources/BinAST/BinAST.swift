@@ -433,7 +433,7 @@ extension String: AST {
 
     public func exec() throws -> Value {
         var v=RuntimeValue(string:self)
-        v.type=RuntimeSwiftType(.string,RuntimeSwiftType_Literal)
+        v.type=RuntimeSwiftType(.string,RuntimeSwiftType_Literal,nil)
         return v
     }
 

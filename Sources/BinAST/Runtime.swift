@@ -74,7 +74,7 @@ public enum TRuntimeSwiftType {
     case slice
 }
 
-public protocol RuntimeVMType {
+public class RuntimeVMType {
 }
 
 public let RuntimeSwiftType_None:UInt8 = 0
