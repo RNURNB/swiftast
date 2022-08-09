@@ -204,7 +204,7 @@ public protocol RuntimeVMType {
 public protocol RuntimeBinaryIntegerVMType: RuntimeVMType {
 }
 
-publuc var runtimeBinaryIntegerVMType: RuntimeBinaryIntegerVMType? = nil
+public var runtimeBinaryIntegerVMType: RuntimeBinaryIntegerVMType? = nil
 
 
 public struct RuntimeValue:Equatable, Hashable {
