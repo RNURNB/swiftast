@@ -236,10 +236,26 @@ public protocol RuntimeVMType {
     func add(lhs: RuntimeValue, rhs: RuntimeValue) -> RuntimeValue?
 }
 
-public protocol RuntimeBinaryIntegerVMType: RuntimeVMType {
+public protocol RuntimeIntegerVMType: RuntimeVMType {
 }
 
-public var runtimeBinaryIntegerVMType: RuntimeBinaryIntegerVMType? = nil
+public protocol RuntimeFloatVMType: RuntimeVMType {
+}
+
+public protocol RuntimeStringVMType: RuntimeVMType {
+}
+
+public protocol RuntimeBoolVMType: RuntimeVMType {
+}
+
+public protocol RuntimeCharacterVMType: RuntimeVMType {
+}
+
+public var runtimeIntegerVMType: RuntimeIntegerVMType? = nil
+public var runtimeFloatVMType: RuntimeFloatVMType? = nil
+public var runtimeStringVMType: RuntimeStringVMType? = nil
+public var runtimeBoolVMType: RuntimeBoolVMType? = nil
+public var runtimeCharacterVMType: RuntimeCharacterVMType? = nil
 
 
 public struct RuntimeValue:Equatable, Hashable {
@@ -466,25 +482,25 @@ public struct RuntimeValue:Equatable, Hashable {
 
     public init() {type=void_rt_type; value=NilAny}
 
-    public init(int8: Int8) {type=int8_rt_type; value=int8}
-    public init(uint8: UInt8) {type=uint8_rt_type; value=uint8}
-    public init(int16: Int16) {type=int16_rt_type; value=int16}
-    public init(uint16: UInt16) {type=uint8_rt_type; value=uint16}
-    public init(int32: Int32) {type=int32_rt_type; value=int32}
-    public init(uint32: UInt32) {type=uint32_rt_type; value=uint32}
-    public init(int: Int) {type=int_rt_type; value=int}
-    public init(uint: UInt) {type=uint_rt_type; value=uint}
-    public init(bigint: Any) {type=BigInt_rt_type; value=bigint}
+    public init(int8: Int8) {type=int8_rt_type; value=int8;vmtype=runtimeIntegerVMType}
+    public init(uint8: UInt8) {type=uint8_rt_type; value=uint8;vmtype=runtimeIntegerVMType}
+    public init(int16: Int16) {type=int16_rt_type; value=int16;vmtype=runtimeIntegerVMType}
+    public init(uint16: UInt16) {type=uint8_rt_type; value=uint16;vmtype=runtimeIntegerVMType}
+    public init(int32: Int32) {type=int32_rt_type; value=int32;vmtype=runtimeIntegerVMType}
+    public init(uint32: UInt32) {type=uint32_rt_type; value=uint32;vmtype=runtimeIntegerVMType}
+    public init(int: Int) {type=int_rt_type; value=int;vmtype=runtimeIntegerVMType}
+    public init(uint: UInt) {type=uint_rt_type; value=uint;vmtype=runtimeIntegerVMType}
+    public init(bigint: Any) {type=BigInt_rt_type; value=bigint;vmtype=runtimeIntegerVMType}
 
-    public init(float: Float) {type=float_rt_type; value=float}
-    public init(double: Double) {type=double_rt_type; value=double}
-    public init(complex: Any) {type=complex_rt_type; value=complex}
+    public init(float: Float) {type=float_rt_type; value=float;vmtype=runtimeFloatVMType}
+    public init(double: Double) {type=double_rt_type; value=double;vmtype=runtimeFloatVMType}
+    public init(complex: Any) {type=complex_rt_type; value=complex;vmtype=runtimeFloatVMType}
 
-    public init(bool: Bool) {type=bool_rt_type; value=bool}
+    public init(bool: Bool) {type=bool_rt_type; value=bool;vmtype=runtimeBoolVMType}
 
-    public init(character: Character) {type=character_rt_type; value=character}
+    public init(character: Character) {type=character_rt_type; value=character;vmtype=runtimeCharacterVMType}
 
-    public init(string: String) {type=string_rt_type; value=string}
+    public init(string: String) {type=string_rt_type; value=string;vmtype=runtimeStringVMType}
 
     public init(object: AnyObject) {type=class_rt_type; value=object}
     
@@ -521,48 +537,48 @@ public struct RuntimeValue:Equatable, Hashable {
         self.value=anyvalue
         if anyvalue is OptionalProtocol {
             if isBinaryInteger(anyvalue) {
-                if anyvalue is Int8 {type=oint8_rt_type}
-                else if anyvalue is Int16 {type=oint16_rt_type}
-                else if anyvalue is Int32 {type=oint32_rt_type}
-                else if anyvalue is Int {type=oint_rt_type}
-                else if anyvalue is Int64 {type=oint_rt_type}
-                else if anyvalue is UInt8 {type=ouint8_rt_type}
-                else if anyvalue is UInt16 {type=ouint16_rt_type}
-                else if anyvalue is UInt32 {type=ouint32_rt_type}
-                else if anyvalue is UInt {type=ouint_rt_type}
-                else if anyvalue is UInt64 {type=oint_rt_type}
+                if anyvalue is Int8 {type=oint8_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is Int16 {type=oint16_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is Int32 {type=oint32_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is Int {type=oint_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is Int64 {type=oint_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt8 {type=ouint8_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt16 {type=ouint16_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt32 {type=ouint32_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt {type=ouint_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt64 {type=oint_rt_type;vmtype=runtimeIntegerVMType}
                 else {type=oany_rt_type}
             }
-            else if anyvalue is String {type=ostring_rt_type}
-            else if anyvalue is Float {type=ofloat_rt_type}
-            else if anyvalue is Double {type=ofloat_rt_type}
-            else if anyvalue is Bool {type=obool_rt_type}
+            else if anyvalue is String {type=ostring_rt_type;vmtype=runtimeStringVMType}
+            else if anyvalue is Float {type=ofloat_rt_type;vmtype=runtimeFloatVMType}
+            else if anyvalue is Double {type=ofloat_rt_type;vmtype=runtimeFloatVMType}
+            else if anyvalue is Bool {type=obool_rt_type;vmtype=runtimeBoolVMType}
             else if anyvalue is AnyObject {type=oclass_rt_type}
-            else if anyvalue is Character {type=ocharacter_rt_type}
+            else if anyvalue is Character {type=ocharacter_rt_type;vmtype=runtimeCharacterVMType}
             //else if anyvalue is Array {type=oarray_rt_type}
             else if anyvalue is Data {type=obytes_rt_type}
             else {type=oany_rt_type}
         }
         else {
             if isBinaryInteger(anyvalue) {
-                if anyvalue is Int8 {type=int8_rt_type}
-                else if anyvalue is Int16 {type=int16_rt_type}
-                else if anyvalue is Int32 {type=int32_rt_type}
-                else if anyvalue is Int {type=int_rt_type}
-                else if anyvalue is Int64 {type=int_rt_type}
-                else if anyvalue is UInt8 {type=uint8_rt_type}
-                else if anyvalue is UInt16 {type=uint16_rt_type}
-                else if anyvalue is UInt32 {type=uint32_rt_type}
-                else if anyvalue is UInt {type=uint_rt_type}
-                else if anyvalue is UInt64 {type=int_rt_type}
+                if anyvalue is Int8 {type=int8_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is Int16 {type=int16_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is Int32 {type=int32_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is Int {type=int_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is Int64 {type=int_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt8 {type=uint8_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt16 {type=uint16_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt32 {type=uint32_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt {type=uint_rt_type;vmtype=runtimeIntegerVMType}
+                else if anyvalue is UInt64 {type=int_rt_type;vmtype=runtimeIntegerVMType}
                 else {type=any_rt_type}
             }
-            else if anyvalue is String {type=string_rt_type}
-            else if anyvalue is Float {type=float_rt_type}
-            else if anyvalue is Double {type=float_rt_type}
-            else if anyvalue is Bool {type=bool_rt_type}
+            else if anyvalue is String {type=string_rt_type;vmtype=runtimeStringVMType}
+            else if anyvalue is Float {type=float_rt_type;vmtype=runtimeFloatVMType}
+            else if anyvalue is Double {type=float_rt_type;vmtype=runtimeFloatVMType}
+            else if anyvalue is Bool {type=bool_rt_type;vmtype=runtimeBoolVMType}
             else if anyvalue is AnyObject {type=class_rt_type}
-            else if anyvalue is Character {type=character_rt_type}
+            else if anyvalue is Character {type=character_rt_type;vmtype=runtimeCharacterVMType}
             //else if anyvalue is Array {type=array_rt_type}
             else if anyvalue is Data {type=bytes_rt_type}
             else {type=any_rt_type}
@@ -570,25 +586,25 @@ public struct RuntimeValue:Equatable, Hashable {
     }
 
     //Optional values
-    public init(int8: Int8?) {type=oint8_rt_type; value=int8 as Any}
-    public init(uint8: UInt8?) {type=ouint8_rt_type; value=uint8 as Any}
-    public init(int16: Int16?) {type=oint16_rt_type; value=int16 as Any}
-    public init(uint16: UInt16?) {type=ouint8_rt_type; value=uint16 as Any}
-    public init(int32: Int32?) {type=oint32_rt_type; value=int32 as Any}
-    public init(uint32: UInt32?) {type=ouint32_rt_type; value=uint32 as Any}
-    public init(int: Int?) {type=oint_rt_type; value=int as Any}
-    public init(uint: UInt?) {type=ouint_rt_type; value=uint as Any}
-    public init(bigint: Any?) {type=oBigInt_rt_type; value=bigint as Any}
+    public init(int8: Int8?) {type=oint8_rt_type; value=int8 as Any;vmtype=runtimeIntegerVMType}
+    public init(uint8: UInt8?) {type=ouint8_rt_type; value=uint8 as Any;vmtype=runtimeIntegerVMType}
+    public init(int16: Int16?) {type=oint16_rt_type; value=int16 as Any;vmtype=runtimeIntegerVMType}
+    public init(uint16: UInt16?) {type=ouint8_rt_type; value=uint16 as Any;vmtype=runtimeIntegerVMType}
+    public init(int32: Int32?) {type=oint32_rt_type; value=int32 as Any;vmtype=runtimeIntegerVMType}
+    public init(uint32: UInt32?) {type=ouint32_rt_type; value=uint32 as Any;vmtype=runtimeIntegerVMType}
+    public init(int: Int?) {type=oint_rt_type; value=int as Any;vmtype=runtimeIntegerVMType}
+    public init(uint: UInt?) {type=ouint_rt_type; value=uint as Any;vmtype=runtimeIntegerVMType}
+    public init(bigint: Any?) {type=oBigInt_rt_type; value=bigint as Any;vmtype=runtimeIntegerVMType}
 
-    public init(float: Float?) {type=ofloat_rt_type; value=float as Any}
-    public init(double: Double?) {type=odouble_rt_type; value=double as Any}
-    public init(complex: Any?) {type=ocomplex_rt_type; value=complex}
+    public init(float: Float?) {type=ofloat_rt_type; value=float as Any;vmtype=runtimeFloatVMType}
+    public init(double: Double?) {type=odouble_rt_type; value=double as Any;vmtype=runtimeFloatVMType}
+    public init(complex: Any?) {type=ocomplex_rt_type; value=complex;vmtype=runtimeFloatVMType}
 
-    public init(bool: Bool?) {type=obool_rt_type; value=bool as Any}
+    public init(bool: Bool?) {type=obool_rt_type; value=bool as Any;vmtype=runtimeBoolVMType}
 
-    public init(character: Character?) {type=ocharacter_rt_type; value=character as Any}
+    public init(character: Character?) {type=ocharacter_rt_type; value=character as Any;vmtype=runtimeCharacterVMType}
 
-    public init(string: String?) {type=ostring_rt_type; value=string as Any}
+    public init(string: String?) {type=ostring_rt_type; value=string as Any;vmtype=runtimeStringVMType}
 
     public init(object: AnyObject?) {type=oclass_rt_type; value=object as Any}
     
