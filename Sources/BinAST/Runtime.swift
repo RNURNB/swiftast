@@ -74,110 +74,113 @@ public enum TRuntimeSwiftType {
     case slice
 }
 
+public protocol RuntimeVMType {
+}
+
 public let RuntimeSwiftType_None:UInt8 = 0
 public let RuntimeSwiftType_Optional:UInt8 = 1
 public let RuntimeSwiftType_Literal:UInt8  = 2
 
-public typealias RuntimeSwiftType=(TRuntimeSwiftType, UInt8/*IsOptional, isLiteral*/)
+public typealias RuntimeSwiftType=(TRuntimeSwiftType, UInt8/*IsOptional, isLiteral*/,RuntimeVMType?)
 
 //Integer Types
-public var int8_rt_type:RuntimeSwiftType=(.int8,RuntimeSwiftType_None)
-public var uint8_rt_type:RuntimeSwiftType=(.uint8,RuntimeSwiftType_None)
-public var int16_rt_type:RuntimeSwiftType=(.int16,RuntimeSwiftType_None)
-public var uint16_rt_type:RuntimeSwiftType=(.uint16,RuntimeSwiftType_None)
-public var int32_rt_type:RuntimeSwiftType=(.int32,RuntimeSwiftType_None)
-public var uint32_rt_type:RuntimeSwiftType=(.uint32,RuntimeSwiftType_None)
-public var int_rt_type:RuntimeSwiftType=(.int,RuntimeSwiftType_None)
-public var uint_rt_type:RuntimeSwiftType=(.uint,RuntimeSwiftType_None)
-public var BigInt_rt_type:RuntimeSwiftType=(.BigInt,RuntimeSwiftType_None)
+public var int8_rt_type:RuntimeSwiftType=(.int8,RuntimeSwiftType_None,nil)
+public var uint8_rt_type:RuntimeSwiftType=(.uint8,RuntimeSwiftType_None,nil)
+public var int16_rt_type:RuntimeSwiftType=(.int16,RuntimeSwiftType_None,nil)
+public var uint16_rt_type:RuntimeSwiftType=(.uint16,RuntimeSwiftType_None,nil)
+public var int32_rt_type:RuntimeSwiftType=(.int32,RuntimeSwiftType_None,nil)
+public var uint32_rt_type:RuntimeSwiftType=(.uint32,RuntimeSwiftType_None,nil)
+public var int_rt_type:RuntimeSwiftType=(.int,RuntimeSwiftType_None,nil)
+public var uint_rt_type:RuntimeSwiftType=(.uint,RuntimeSwiftType_None,nil)
+public var BigInt_rt_type:RuntimeSwiftType=(.BigInt,RuntimeSwiftType_None,nil)
 
 //Optional Integer Types
-public var oint8_rt_type:RuntimeSwiftType=(.int8,RuntimeSwiftType_Optional)
-public var ouint8_rt_type:RuntimeSwiftType=(.uint8,RuntimeSwiftType_Optional)
-public var oint16_rt_type:RuntimeSwiftType=(.int16,RuntimeSwiftType_Optional)
-public var ouint16_rt_type:RuntimeSwiftType=(.uint16,RuntimeSwiftType_Optional)
-public var oint32_rt_type:RuntimeSwiftType=(.int32,RuntimeSwiftType_Optional)
-public var ouint32_rt_type:RuntimeSwiftType=(.uint32,RuntimeSwiftType_Optional)
-public var oint_rt_type:RuntimeSwiftType=(.int,RuntimeSwiftType_Optional)
-public var ouint_rt_type:RuntimeSwiftType=(.uint,RuntimeSwiftType_Optional)
-public var oBigInt_rt_type:RuntimeSwiftType=(.BigInt,RuntimeSwiftType_Optional)
+public var oint8_rt_type:RuntimeSwiftType=(.int8,RuntimeSwiftType_Optional,nil)
+public var ouint8_rt_type:RuntimeSwiftType=(.uint8,RuntimeSwiftType_Optional,nil)
+public var oint16_rt_type:RuntimeSwiftType=(.int16,RuntimeSwiftType_Optional,nil)
+public var ouint16_rt_type:RuntimeSwiftType=(.uint16,RuntimeSwiftType_Optional,nil)
+public var oint32_rt_type:RuntimeSwiftType=(.int32,RuntimeSwiftType_Optional,nil)
+public var ouint32_rt_type:RuntimeSwiftType=(.uint32,RuntimeSwiftType_Optional,nil)
+public var oint_rt_type:RuntimeSwiftType=(.int,RuntimeSwiftType_Optional,nil)
+public var ouint_rt_type:RuntimeSwiftType=(.uint,RuntimeSwiftType_Optional,nil)
+public var oBigInt_rt_type:RuntimeSwiftType=(.BigInt,RuntimeSwiftType_Optional,nil)
 
 //Floating Point Types
-public var float_rt_type:RuntimeSwiftType=(.float,RuntimeSwiftType_None)
-public var double_rt_type:RuntimeSwiftType=(.double,RuntimeSwiftType_None)
-public var complex_rt_type:RuntimeSwiftType=(.complex,RuntimeSwiftType_None)
+public var float_rt_type:RuntimeSwiftType=(.float,RuntimeSwiftType_None,nil)
+public var double_rt_type:RuntimeSwiftType=(.double,RuntimeSwiftType_None,nil)
+public var complex_rt_type:RuntimeSwiftType=(.complex,RuntimeSwiftType_None,nil)
 
 //Optional Floating Point Types
-public var ofloat_rt_type:RuntimeSwiftType=(.float,RuntimeSwiftType_Optional)
-public var odouble_rt_type:RuntimeSwiftType=(.double,RuntimeSwiftType_Optional)
-public var ocomplex_rt_type:RuntimeSwiftType=(.complex,RuntimeSwiftType_Optional)
+public var ofloat_rt_type:RuntimeSwiftType=(.float,RuntimeSwiftType_Optional,nil)
+public var odouble_rt_type:RuntimeSwiftType=(.double,RuntimeSwiftType_Optional,nil)
+public var ocomplex_rt_type:RuntimeSwiftType=(.complex,RuntimeSwiftType_Optional,nil)
 
-public var bool_rt_type:RuntimeSwiftType=(.bool,RuntimeSwiftType_None)
-public var obool_rt_type:RuntimeSwiftType=(.bool,RuntimeSwiftType_Optional)
+public var bool_rt_type:RuntimeSwiftType=(.bool,RuntimeSwiftType_None,nil)
+public var obool_rt_type:RuntimeSwiftType=(.bool,RuntimeSwiftType_Optional,nil)
 
-public var character_rt_type:RuntimeSwiftType=(.character,RuntimeSwiftType_None)
-public var ocharacter_rt_type:RuntimeSwiftType=(.character,RuntimeSwiftType_Optional)
+public var character_rt_type:RuntimeSwiftType=(.character,RuntimeSwiftType_None,nil)
+public var ocharacter_rt_type:RuntimeSwiftType=(.character,RuntimeSwiftType_Optional,nil)
 
-public var void_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None)
+public var void_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None,nil)
 
-public var cell_rt_type:RuntimeSwiftType=(.cell,RuntimeSwiftType_None)
-public var ellipsis_rt_type:RuntimeSwiftType=(.ellipsis,RuntimeSwiftType_None)
-public var code_rt_type:RuntimeSwiftType=(.code,RuntimeSwiftType_None)
-public var tuple_rt_type:RuntimeSwiftType=(.tuple,RuntimeSwiftType_None)
-public var bytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_None)
-public var array_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_None)
-public var set_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_None)
-public var frozenset_rt_type:RuntimeSwiftType=(.frozenset,RuntimeSwiftType_None)
-public var setelement_rt_type:RuntimeSwiftType=(.setelement,RuntimeSwiftType_None)
-public var exception_rt_type:RuntimeSwiftType=(.exception,RuntimeSwiftType_None)
-public var list_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_None)
-public var key_rt_type:RuntimeSwiftType=(.key,RuntimeSwiftType_None)
-public var keyvalue_rt_type:RuntimeSwiftType=(.keyvalue,RuntimeSwiftType_None)
-public var slice_rt_type:RuntimeSwiftType=(.slice,RuntimeSwiftType_None)
-public var any_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_None)
+public var cell_rt_type:RuntimeSwiftType=(.cell,RuntimeSwiftType_None,nil)
+public var ellipsis_rt_type:RuntimeSwiftType=(.ellipsis,RuntimeSwiftType_None,nil)
+public var code_rt_type:RuntimeSwiftType=(.code,RuntimeSwiftType_None,nil)
+public var tuple_rt_type:RuntimeSwiftType=(.tuple,RuntimeSwiftType_None,nil)
+public var bytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_None,nil)
+public var array_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_None,nil)
+public var set_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_None,nil)
+public var frozenset_rt_type:RuntimeSwiftType=(.frozenset,RuntimeSwiftType_None,nil)
+public var setelement_rt_type:RuntimeSwiftType=(.setelement,RuntimeSwiftType_None,nil)
+public var exception_rt_type:RuntimeSwiftType=(.exception,RuntimeSwiftType_None,nil)
+public var list_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_None,nil)
+public var key_rt_type:RuntimeSwiftType=(.key,RuntimeSwiftType_None,nil)
+public var keyvalue_rt_type:RuntimeSwiftType=(.keyvalue,RuntimeSwiftType_None,nil)
+public var slice_rt_type:RuntimeSwiftType=(.slice,RuntimeSwiftType_None,nil)
+public var any_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_None,nil)
 
-public var nil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None)
-public var literalNil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_Literal)
+public var nil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_None,nil)
+public var literalNil_rt_type:RuntimeSwiftType=(.nil,RuntimeSwiftType_Literal,nil)
 
 //String Types
-public var string_rt_type:RuntimeSwiftType=(.string,RuntimeSwiftType_None)
-public var ostring_rt_type:RuntimeSwiftType=(.string,RuntimeSwiftType_Optional)
+public var string_rt_type:RuntimeSwiftType=(.string,RuntimeSwiftType_None,nil)
+public var ostring_rt_type:RuntimeSwiftType=(.string,RuntimeSwiftType_Optional,nil)
 
 //variables / functions / types / classes
-public var variable_rt_type:RuntimeSwiftType=(.variable,RuntimeSwiftType_None)
-public var variablelist_rt_type:RuntimeSwiftType=(.variableList,RuntimeSwiftType_None)
+public var variable_rt_type:RuntimeSwiftType=(.variable,RuntimeSwiftType_None,nil)
+public var variablelist_rt_type:RuntimeSwiftType=(.variableList,RuntimeSwiftType_None,nil)
 
-public var type_rt_type:RuntimeSwiftType=(.type,RuntimeSwiftType_None)
-public var typelist_rt_type:RuntimeSwiftType=(.typeList,RuntimeSwiftType_None)
+public var type_rt_type:RuntimeSwiftType=(.type,RuntimeSwiftType_None,nil)
+public var typelist_rt_type:RuntimeSwiftType=(.typeList,RuntimeSwiftType_None,nil)
 
-public var function_rt_type:RuntimeSwiftType=(.function,RuntimeSwiftType_None)
-public var functionlist_rt_type:RuntimeSwiftType=(.functionList,RuntimeSwiftType_None)
+public var function_rt_type:RuntimeSwiftType=(.function,RuntimeSwiftType_None,nil)
+public var functionlist_rt_type:RuntimeSwiftType=(.functionList,RuntimeSwiftType_None,nil)
 
-public var class_rt_type:RuntimeSwiftType=(.class,RuntimeSwiftType_None)
-public var oclass_rt_type:RuntimeSwiftType=(.class,RuntimeSwiftType_Optional)
+public var class_rt_type:RuntimeSwiftType=(.class,RuntimeSwiftType_None,nil)
+public var oclass_rt_type:RuntimeSwiftType=(.class,RuntimeSwiftType_Optional,nil)
 
-public var struct_rt_type:RuntimeSwiftType=(.struct,RuntimeSwiftType_None)
-public var ostruct_rt_type:RuntimeSwiftType=(.struct,RuntimeSwiftType_Optional)
+public var struct_rt_type:RuntimeSwiftType=(.struct,RuntimeSwiftType_None,nil)
+public var ostruct_rt_type:RuntimeSwiftType=(.struct,RuntimeSwiftType_Optional,nil)
 
-public var enum_rt_type:RuntimeSwiftType=(.enum,RuntimeSwiftType_None)
-public var oenum_rt_type:RuntimeSwiftType=(.enum,RuntimeSwiftType_Optional)
+public var enum_rt_type:RuntimeSwiftType=(.enum,RuntimeSwiftType_None,nil)
+public var oenum_rt_type:RuntimeSwiftType=(.enum,RuntimeSwiftType_Optional,nil)
 
-public var pointer_rt_type:RuntimeSwiftType=(.pointer,RuntimeSwiftType_None)
-public var opointer_rt_type:RuntimeSwiftType=(.pointer,RuntimeSwiftType_Optional)
+public var pointer_rt_type:RuntimeSwiftType=(.pointer,RuntimeSwiftType_None,nil)
+public var opointer_rt_type:RuntimeSwiftType=(.pointer,RuntimeSwiftType_Optional,nil)
 
-public var dictionary_rt_type:RuntimeSwiftType=(.dictionary,RuntimeSwiftType_None)
-public var odictionary_rt_type:RuntimeSwiftType=(.dictionary,RuntimeSwiftType_Optional)
+public var dictionary_rt_type:RuntimeSwiftType=(.dictionary,RuntimeSwiftType_None,nil)
+public var odictionary_rt_type:RuntimeSwiftType=(.dictionary,RuntimeSwiftType_Optional,nil)
 
-public var otuple_rt_type:RuntimeSwiftType=(.tuple,RuntimeSwiftType_Optional)
-public var oany_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_Optional)
+public var otuple_rt_type:RuntimeSwiftType=(.tuple,RuntimeSwiftType_Optional,nil)
+public var oany_rt_type:RuntimeSwiftType=(.any,RuntimeSwiftType_Optional,nil)
 
-public var obytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_Optional)
-public var oarray_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_Optional)
-public var oset_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_Optional)
-public var osetelement_rt_type:RuntimeSwiftType=(.setelement,RuntimeSwiftType_Optional)
-public var ofrozenset_rt_type:RuntimeSwiftType=(.frozenset,RuntimeSwiftType_Optional)
-public var oslice_rt_type:RuntimeSwiftType=(.slice,RuntimeSwiftType_Optional)
-public var olist_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_Optional)
+public var obytes_rt_type:RuntimeSwiftType=(.bytes,RuntimeSwiftType_Optional,nil)
+public var oarray_rt_type:RuntimeSwiftType=(.array,RuntimeSwiftType_Optional,nil)
+public var oset_rt_type:RuntimeSwiftType=(.set,RuntimeSwiftType_Optional,nil)
+public var osetelement_rt_type:RuntimeSwiftType=(.setelement,RuntimeSwiftType_Optional,nil)
+public var ofrozenset_rt_type:RuntimeSwiftType=(.frozenset,RuntimeSwiftType_Optional,nil)
+public var oslice_rt_type:RuntimeSwiftType=(.slice,RuntimeSwiftType_Optional,nil)
+public var olist_rt_type:RuntimeSwiftType=(.list,RuntimeSwiftType_Optional,nil)
 
 public var runtimeNilValue=RuntimeValue(literalNil:nil)
 
