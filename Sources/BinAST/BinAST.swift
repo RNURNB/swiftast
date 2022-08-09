@@ -500,7 +500,7 @@ extension Int: AST {
         return v
     }
 
-    public func getType() -> ASTType {return IntType,nil}
+    public func getType() -> ASTType {return IntType}
 }
 
 extension Double: AST {
