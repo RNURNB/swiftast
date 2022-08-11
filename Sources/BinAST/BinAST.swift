@@ -150,10 +150,10 @@ public protocol AST {
 }
 
 public class ASTLocation: SourceLocatable, CustomStringConvertible {
-    var module:ASTModule?
-    var file:Int
-    var line:Int
-    var column:Int
+    public var module:ASTModule?
+    public var file:Int
+    public var line:Int
+    public var column:Int
 
     public var description: String {
         if module != nil {
