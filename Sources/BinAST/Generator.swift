@@ -2,12 +2,12 @@ import Foundation
 import SwiftAST
 //import Runtime
 
-var allModules:[ASTModule]=[ASTModule(name: "Swift")] //modules (0=Swift, 1=current)
-var currentModule: ASTModule = allModules[0]
+public var allModules:[ASTModule]=[ASTModule(name: "Swift")] //modules (0=Swift, 1=current)
+public var currentModule: ASTModule = allModules[0]
 
 public var registeredClasses:[String:Any.Type]=[:]
 
-var options:[String:String]=[:]
+public var options:[String:String]=[:]
 
 public func setOption(option:String, value: String) {
     options[option]=value
