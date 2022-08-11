@@ -3197,8 +3197,8 @@ public class IdentifierExpression: ASTBase, Expression {
         case bindingReference(String)
     }
 
-    var kind:IdentiferKind
-    var impl:[AST]?
+    public var kind:IdentiferKind
+    public var impl:[AST]?
 
     public override init() {
         kind = .bindingReference("")
