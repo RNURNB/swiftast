@@ -85,7 +85,7 @@ public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
         
         public func runDeclarations(isTopLevel:Bool) {}
         
-        public func generate(delegate: ASTDelegate) throws {delegate.generateASTType_TryIndexedType(self)}        
+        public func generate(delegate: ASTDelegate) throws {try delegate.generateASTType_TryIndexedType(self)}        
 
         public func exec() throws -> Value {runtimeNilValue}
 
@@ -245,7 +245,7 @@ public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
 
     public override func getType() throws -> ASTType {return self}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateASTType(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateASTType(self)}
 }
 
 public struct ASTGenericParameterClause: AST {
@@ -328,7 +328,7 @@ public struct ASTGenericParameterClause: AST {
   
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateASTGenericParameterClause(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateASTGenericParameterClause(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 

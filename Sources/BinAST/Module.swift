@@ -480,7 +480,7 @@ public class Scope: ASTBase, Identifiable {
         declaredScopes[function.name]=self
     }
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateScope(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateScope(self)}
 }
 
 public class ASTModule: Scope, CustomStringConvertible {
@@ -841,7 +841,7 @@ public class ASTModule: Scope, CustomStringConvertible {
         return m
     }
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateASTModule(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateASTModule(self)}
 }
 
 

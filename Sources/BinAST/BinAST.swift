@@ -29,101 +29,101 @@ public enum ConditionType: Int {
 
 
 public protocol ASTDelegate {
-    func generateASTBase(_ ast: ASTBase)
+    func generateASTBase(_ ast: ASTBase) throws
     
-    func generateASTType(_ ast: ASTType)
+    func generateASTType(_ ast: ASTType) throws
     
-    func generateASTType_TryIndexedType(_ ast: ASTType.TryIndexedType)
+    func generateASTType_TryIndexedType(_ ast: ASTType.TryIndexedType) throws
     
-    func generateString(_ ast: String)
+    func generateString(_ ast: String) throws
     
-    func generateBool(_ ast: Bool)
+    func generateBool(_ ast: Bool) throws
     
-    func generateInt(_ ast: Int)
+    func generateInt(_ ast: Int) throws
     
-    func generateDouble(_ ast: Double)
+    func generateDouble(_ ast: Double) throws
     
-    func generateASTTypeIdentifier_TypeName(_ ast: ASTTypeIdentifier.TypeName)
+    func generateASTTypeIdentifier_TypeName(_ ast: ASTTypeIdentifier.TypeName) throws
     
-    func generateASTTypeIdentifier(_ ast: ASTTypeIdentifier)
+    func generateASTTypeIdentifier(_ ast: ASTTypeIdentifier) throws
     
-    func generateASTProtocolCompositionType(_ ast: ASTProtocolCompositionType)
+    func generateASTProtocolCompositionType(_ ast: ASTProtocolCompositionType) throws
     
-    func generateASTGenericWhereClause_Requirement(_ ast: ASTGenericWhereClause.Requirement)
+    func generateASTGenericWhereClause_Requirement(_ ast: ASTGenericWhereClause.Requirement) throws
     
-    func generateASTGenericWhereClause(_ ast: ASTGenericWhereClause)
+    func generateASTGenericWhereClause(_ ast: ASTGenericWhereClause) throws
     
-    func generateASTTypeInheritanceClause(_ ast: ASTTypeInheritanceClause)
+    func generateASTTypeInheritanceClause(_ ast: ASTTypeInheritanceClause) throws
     
-    func generateFunctionResult(_ ast: FunctionResult)
+    func generateFunctionResult(_ ast: FunctionResult) throws
     
-    func generateFunctionSignature(_ ast: FunctionSignature)
+    func generateFunctionSignature(_ ast: FunctionSignature) throws
     
-    func generateMember(_ ast: Member)
+    func generateMember(_ ast: Member) throws
     
-    func generateASTTypeAnnotation(_ ast: ASTTypeAnnotation)
+    func generateASTTypeAnnotation(_ ast: ASTTypeAnnotation) throws
     
-    func generateASTGenericArgumentClause(_ ast: ASTGenericArgumentClause)
+    func generateASTGenericArgumentClause(_ ast: ASTGenericArgumentClause) throws
     
-    func generateDictionaryEntry(_ ast: DictionaryEntry)
+    func generateDictionaryEntry(_ ast: DictionaryEntry) throws
     
-    func generatePlaygroundLiteral(_ ast: PlaygroundLiteral)
+    func generatePlaygroundLiteral(_ ast: PlaygroundLiteral) throws
     
-    func generateASTGenericParameterClause(_ ast: ASTGenericParameterClause)
+    func generateASTGenericParameterClause(_ ast: ASTGenericParameterClause) throws
     
-    func generateUnaryOperation(_ ast: UnaryOperation)
+    func generateUnaryOperation(_ ast: UnaryOperation) throws
     
-    func generateBinaryOperation(_ ast: BinaryOperation)
+    func generateBinaryOperation(_ ast: BinaryOperation) throws
     
-    func generateVariable(_ ast: Variable)
+    func generateVariable(_ ast: Variable) throws
     
-    func generateVariableDeclaration(_ ast: VariableDeclaration)
+    func generateVariableDeclaration(_ ast: VariableDeclaration) throws
     
-    func generateTypealiasDeclaration(_ ast: TypealiasDeclaration)
+    func generateTypealiasDeclaration(_ ast: TypealiasDeclaration) throws
     
-    func generateImportDeclaration(_ ast: ImportDeclaration)
+    func generateImportDeclaration(_ ast: ImportDeclaration) throws
     
-    func generateWillSetDidSetBlock(_ ast: WillSetDidSetBlock)
+    func generateWillSetDidSetBlock(_ ast: WillSetDidSetBlock) throws
     
-    func generateGetterSetterKeywordBlock(_ ast: GetterSetterKeywordBlock)
+    func generateGetterSetterKeywordBlock(_ ast: GetterSetterKeywordBlock) throws
     
-    func generateMethodMember(_ ast: MethodMember)
+    func generateMethodMember(_ ast: MethodMember) throws
     
-    func generateAssociativityTypeMember(_ ast: AssociativityTypeMember)
+    func generateAssociativityTypeMember(_ ast: AssociativityTypeMember) throws
     
-    func generateClassDeclaration(_ ast: ClassDeclaration)
+    func generateClassDeclaration(_ ast: ClassDeclaration) throws
     
-    func generateStructDeclaration(_ ast: StructDeclaration)
+    func generateStructDeclaration(_ ast: StructDeclaration) throws
     
-    func generateProtocolDeclaration(_ ast: ProtocolDeclaration)
+    func generateProtocolDeclaration(_ ast: ProtocolDeclaration) throws
     
-    func generateFunctionDeclaration(_ ast: FunctionDeclaration)
+    func generateFunctionDeclaration(_ ast: FunctionDeclaration) throws
     
-    func generateIdentifierExpression(_ ast: IdentifierExpression)
+    func generateIdentifierExpression(_ ast: IdentifierExpression) throws
     
-    func generateSubscriptMember(_ ast: SubscriptMember)
+    func generateSubscriptMember(_ ast: SubscriptMember) throws
     
-    func generateLiteral(_ ast: Literal)
+    func generateLiteral(_ ast: Literal) throws
     
-    func generateExplicitMemberExpression(_ ast: ExplicitMemberExpression)
+    func generateExplicitMemberExpression(_ ast: ExplicitMemberExpression) throws
     
-    func generateScope(_ ast: Scope)
+    func generateScope(_ ast: Scope) throws
     
-    func generateASTModule(_ ast: ASTModule)
+    func generateASTModule(_ ast: ASTModule) throws
     
-    func generateCompound(_ ast: Compound)
+    func generateCompound(_ ast: Compound) throws
     
-    func generateNoOp(_ ast: NoOp)
+    func generateNoOp(_ ast: NoOp) throws
     
-    func generateAssignment(_ ast: Assignment)
+    func generateAssignment(_ ast: Assignment) throws
     
-    func generateReturnStatement(_ ast: ReturnStatement)
+    func generateReturnStatement(_ ast: ReturnStatement) throws
     
-    func generateClosureExpression(_ ast: ClosureExpression)
+    func generateClosureExpression(_ ast: ClosureExpression) throws
     
-    func generateFunctionCallExpression(_ ast: FunctionCallExpression)
+    func generateFunctionCallExpression(_ ast: FunctionCallExpression) throws
     
-    func generateCodeBlock(_ ast: CodeBlock)
+    func generateCodeBlock(_ ast: CodeBlock) throws
     
     
     //public func generate(delegate: ASTDelegate) throws {delegate.generateASTBase(self)}
@@ -481,7 +481,7 @@ public class ASTBase: AST {
     
     open func runDeclarations(isTopLevel:Bool) throws {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateASTBase(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateASTBase(self)}
 
     open func exec() throws -> Value {runtimeNilValue}
     
@@ -536,7 +536,7 @@ extension String: AST {
     
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateString(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateString(self)}
 
     public func exec() throws -> Value {
         var v=RuntimeValue(string:self)
@@ -570,7 +570,7 @@ extension Bool: AST {
     
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateBool(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateBool(self)}
 
     public func exec() throws -> Value {
         var v=RuntimeValue(bool:self)
@@ -604,7 +604,7 @@ extension Int: AST {
     
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateInt(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateInt(self)}
 
     public func exec() throws -> Value {
         var v=RuntimeValue(int:self)
@@ -638,7 +638,7 @@ extension Double: AST {
     
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateDouble(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateDouble(self)}
 
     public func exec() throws -> Value {
         var v=RuntimeValue(double:self)
@@ -704,7 +704,7 @@ public class UnaryOperation: ASTBase {
 
     public override func getType() throws -> ASTType {return try operand.getType()}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateUnaryOperation(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateUnaryOperation(self)}
 }
 
 public class BinaryOperation: ASTBase {
@@ -764,7 +764,7 @@ public class BinaryOperation: ASTBase {
 
     public override func getType() throws -> ASTType {return try left.getType()} //??
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateBinaryOperation(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateBinaryOperation(self)}
 }
 
 public class Variable: ASTBase, RuntimeVariable {
@@ -887,7 +887,7 @@ public class Variable: ASTBase, RuntimeVariable {
 
     public override func getType() -> ASTType {return typeAnnotation.type}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateVariable(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateVariable(self)}
 }
 
 public class VariableDeclaration: ASTBase, Declaration {
@@ -991,7 +991,7 @@ public class VariableDeclaration: ASTBase, Declaration {
 
     public override func getType() -> ASTType {return typeAnnotation.type}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateVariableDeclaration(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateVariableDeclaration(self)}
 }
 
 public class TypealiasDeclaration: ASTBase, Declaration {
@@ -1069,7 +1069,7 @@ public class TypealiasDeclaration: ASTBase, Declaration {
 
     public override func getType() -> ASTType {return alias.getType()}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateTypealiasDeclaration(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateTypealiasDeclaration(self)}
 }
 
 public class ImportDeclaration: Scope, Declaration {
@@ -1144,7 +1144,7 @@ public class ImportDeclaration: Scope, Declaration {
 
     public override func getType() -> ASTType {return VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateImportDeclaration(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateImportDeclaration(self)}
 }
 
 public class ASTTypeIdentifier : AST {
@@ -1197,7 +1197,7 @@ public class ASTTypeIdentifier : AST {
   
         public func runDeclarations(isTopLevel:Bool) {}
         
-        public func generate(delegate: ASTDelegate) throws {delegate.generateASTTypeIdentifier_TypeName(self)}
+        public func generate(delegate: ASTDelegate) throws {try delegate.generateASTTypeIdentifier_TypeName(self)}
         
         public func exec() throws -> Value {runtimeNilValue}
 
@@ -1253,7 +1253,7 @@ public class ASTTypeIdentifier : AST {
   
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateASTTypeIdentifier(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateASTTypeIdentifier(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
  
@@ -1309,7 +1309,7 @@ public class ASTProtocolCompositionType : AST {
   
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateASTProtocolCompositionType(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateASTProtocolCompositionType(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -1386,7 +1386,7 @@ public struct ASTGenericWhereClause: AST {
         
         public func runDeclarations(isTopLevel:Bool) {}
         
-        public func generate(delegate: ASTDelegate) throws {delegate.generateASTGenericWhereClause_Requirement(self)}
+        public func generate(delegate: ASTDelegate) throws {try delegate.generateASTGenericWhereClause_Requirement(self)}
 
         public func exec() throws -> Value {runtimeNilValue}
 
@@ -1441,7 +1441,7 @@ public struct ASTGenericWhereClause: AST {
   
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateASTGenericWhereClause(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateASTGenericWhereClause(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -1500,7 +1500,7 @@ public struct ASTTypeInheritanceClause:AST {
   
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateASTTypeInheritanceClause(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateASTTypeInheritanceClause(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -1633,7 +1633,7 @@ public class WillSetDidSetBlock: ASTBase {
 
     public override func getType() throws -> ASTType {return VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateWillSetDidSetBlock(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateWillSetDidSetBlock(self)}
 }
 
 public class GetterSetterKeywordBlock: ASTBase {
@@ -1791,7 +1791,7 @@ public class GetterSetterKeywordBlock: ASTBase {
 
     public override func getType() throws -> ASTType {return VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateGetterSetterKeywordBlock(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateGetterSetterKeywordBlock(self)}
 }
 
 public class PropertyMember: VariableDeclaration {
@@ -1936,7 +1936,7 @@ public struct FunctionResult:AST {
     
     public func runDeclarations(isTopLevel:Bool) throws {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateFunctionResult(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateFunctionResult(self)}
     
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -2099,7 +2099,7 @@ public struct FunctionSignature:AST {
     
     public func runDeclarations(isTopLevel:Bool) throws {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateFunctionSignature(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateFunctionSignature(self)}
     
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -2421,7 +2421,7 @@ public class SubscriptMember: ASTBase {
 
     public override func getType() -> ASTType {return resultType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateSubscriptMember(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateSubscriptMember(self)}
 }
 
 public class AssociativityTypeMember: ASTBase {
@@ -2526,7 +2526,7 @@ public class AssociativityTypeMember: ASTBase {
 
     public override func getType() throws -> ASTType {return assignmentType ?? VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateAssociativityTypeMember(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateAssociativityTypeMember(self)}
 }
 
 public enum Member: AST {
@@ -2636,7 +2636,7 @@ public enum Member: AST {
         }
     }
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateMember(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateMember(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -2793,7 +2793,7 @@ public class ClassDeclaration: Scope, Declaration {
     
     public override func getType() throws -> ASTType {return impl}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateClassDeclaration(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateClassDeclaration(self)}
 }
 
 public class StructDeclaration: Scope, Declaration {
@@ -2936,7 +2936,7 @@ public class StructDeclaration: Scope, Declaration {
 
     public override func getType() throws -> ASTType {return impl}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateStructDeclaration(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateStructDeclaration(self)}
 }
 
 public class ASTTypeAnnotation : AST {
@@ -2989,7 +2989,7 @@ public class ASTTypeAnnotation : AST {
   
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateASTTypeAnnotation(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateASTTypeAnnotation(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -3125,7 +3125,7 @@ public class ProtocolDeclaration: Scope, Declaration {
 
     public override func getType() throws -> ASTType {return impl}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateProtocolDeclaration(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateProtocolDeclaration(self)}
 }
 
 protocol Expression: AST {
@@ -3183,7 +3183,7 @@ public struct ASTGenericArgumentClause: AST {
   
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateASTGenericArgumentClause(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateASTGenericArgumentClause(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -3395,7 +3395,7 @@ public class IdentifierExpression: ASTBase, Expression {
         throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.internalError("IdentifierExpression getType, no type"), sourceLocatable: self.location)
     }
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateIdentifierExpression(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateIdentifierExpression(self)}
 }
 
 public class DictionaryEntry: AST {
@@ -3445,7 +3445,7 @@ public class DictionaryEntry: AST {
     
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generateDictionaryEntry(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generateDictionaryEntry(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -3512,7 +3512,7 @@ public enum PlaygroundLiteral: AST {
     
     public func runDeclarations(isTopLevel:Bool) {}
     
-    public func generate(delegate: ASTDelegate) throws {delegate.generatePlaygroundLiteral(self)}
+    public func generate(delegate: ASTDelegate) throws {try delegate.generatePlaygroundLiteral(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -3676,7 +3676,7 @@ public class FunctionDeclaration : ASTBase, RuntimeFunctionDeclaration {
         }
     }
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateFunctionDeclaration(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateFunctionDeclaration(self)}
     
     public override func exec() throws -> Value {
         //return try body?.exec() ?? runtimeNilValue
@@ -3902,7 +3902,7 @@ public class Literal: ASTBase {
         }
     }
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateLiteral(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateLiteral(self)}
     
 }
 
@@ -4073,7 +4073,7 @@ public class ExplicitMemberExpression : ASTBase {
         
     }
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateExplicitMemberExpression(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateExplicitMemberExpression(self)}
       
 }
 

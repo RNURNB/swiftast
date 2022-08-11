@@ -91,7 +91,7 @@ public class Compound: ASTBase, Declaration {
 
     public override func getType() throws -> ASTType {return VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateCompound(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateCompound(self)}
 }
 
 public class NoOp: ASTBase, Statement {
@@ -125,7 +125,7 @@ public class NoOp: ASTBase, Statement {
 
     public override func getType() throws -> ASTType {return VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateNoOp(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateNoOp(self)}
 }
 
 func doVarAssignment(variable:inout RuntimeVariable, expr: AST, initializer: Bool=false) throws {
@@ -237,7 +237,7 @@ public class Assignment: ASTBase, Statement {
 
     public override func getType() throws -> ASTType {return VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateAssignment(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateAssignment(self)}
 }
 
 
@@ -313,7 +313,7 @@ public class CodeBlock : ASTBase, Statement {
 
     public override func getType() throws -> ASTType {return VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateCodeBlock(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateCodeBlock(self)}
 }
 
 public class ReturnStatement : ASTBase, Statement {
@@ -377,7 +377,7 @@ public class ReturnStatement : ASTBase, Statement {
     
     public override func getType() throws -> ASTType {return (try expression?.getType()) ?? VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateReturnStatement(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateReturnStatement(self)}
 
 }
 
@@ -631,7 +631,7 @@ public class ClosureExpression : ASTBase {
 
     public override func getType() throws -> ASTType {return signature?.functionResult?.type ?? VoidType}
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateClosureExpression(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateClosureExpression(self)}
 }
 
 #if WINDOWS
@@ -711,7 +711,7 @@ public class FunctionCallExpression : ASTBase {
         super.init()
     }
     
-    public override func generate(delegate: ASTDelegate) throws {delegate.generateFunctionCallExpression(self)}
+    public override func generate(delegate: ASTDelegate) throws {try delegate.generateFunctionCallExpression(self)}
     
     public init(postfixExpression: AST, argumentClause: [Argument]?, trailingClosure: ClosureExpression?=nil, location: SourceLocatable) {
         self.postfixExpression = postfixExpression
