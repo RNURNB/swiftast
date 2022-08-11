@@ -5,10 +5,10 @@ import SwiftAST
 protocol Statement: Declaration {
 }
 
-class Compound: ASTBase, Declaration {
-    var children: [AST]
-    var dummy:Bool
-    var start:AST?=nil
+public class Compound: ASTBase, Declaration {
+    public var children: [AST]
+    public var dummy:Bool
+    public var start:AST?=nil
 
     public override init() {
         children=[]
@@ -90,9 +90,11 @@ class Compound: ASTBase, Declaration {
     }
 
     public override func getType() throws -> ASTType {return VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateCompound(self)}
 }
 
-class NoOp: ASTBase, Statement {
+public class NoOp: ASTBase, Statement {
     
     public override init() {
         super.init()
@@ -122,6 +124,8 @@ class NoOp: ASTBase, Statement {
     }
 
     public override func getType() throws -> ASTType {return VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateNoOp(self)}
 }
 
 func doVarAssignment(variable:inout RuntimeVariable, expr: AST, initializer: Bool=false) throws {
@@ -146,9 +150,9 @@ func doVarAssignment(variable:inout RuntimeVariable, expr: AST, initializer: Boo
     //print("assignment result:",variable.value!)
 }
 
-class Assignment: ASTBase, Statement {
-    var lhs: AST
-    var rhs: AST 
+public class Assignment: ASTBase, Statement {
+    public var lhs: AST
+    public var rhs: AST 
 
     public override init() {
         lhs = NoOp()
@@ -232,12 +236,14 @@ class Assignment: ASTBase, Statement {
     }
 
     public override func getType() throws -> ASTType {return VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateAssignment(self)}
 }
 
 
 public class CodeBlock : ASTBase, Statement {
     public var statements: [AST]
-    var start:AST?=nil
+    public var start:AST?=nil
     
     public override init() {
         statements = []
@@ -306,10 +312,12 @@ public class CodeBlock : ASTBase, Statement {
     }
 
     public override func getType() throws -> ASTType {return VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateCodeBlock(self)}
 }
 
 public class ReturnStatement : ASTBase, Statement {
-    var expression: AST?
+    public var expression: AST?
 
     public override init() {
         expression=nil
@@ -368,6 +376,8 @@ public class ReturnStatement : ASTBase, Statement {
     }
     
     public override func getType() throws -> ASTType {return (try expression?.getType()) ?? VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateReturnStatement(self)}
 
 }
 
@@ -620,6 +630,8 @@ public class ClosureExpression : ASTBase {
     }
 
     public override func getType() throws -> ASTType {return signature?.functionResult?.type ?? VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateClosureExpression(self)}
 }
 
 #if WINDOWS
@@ -690,7 +702,7 @@ public class FunctionCallExpression : ASTBase {
     public var argumentClause: [Argument]?
     public var trailingClosure: ClosureExpression?
 
-    var resolvedTarget: FunctionDeclaration?=nil
+    public var resolvedTarget: FunctionDeclaration?=nil
 
     public override init() {
         postfixExpression=NoOp()
@@ -698,6 +710,8 @@ public class FunctionCallExpression : ASTBase {
         trailingClosure=nil
         super.init()
     }
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateFunctionCallExpression(self)}
     
     public init(postfixExpression: AST, argumentClause: [Argument]?, trailingClosure: ClosureExpression?=nil, location: SourceLocatable) {
         self.postfixExpression = postfixExpression
@@ -1276,9 +1290,7 @@ public class FunctionCallExpression : ASTBase {
 
         //throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.internalError("todo call:\(resolvedTarget!)"), sourceLocatable: self.location)
         //todo?
-        return try resolvedTarget!.executor(args) 
-    
-        return result
+        return try resolvedTarget!.executor(args) 
     }
     
     public override func getType() throws -> ASTType {return try postfixExpression.getType()}

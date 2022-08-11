@@ -4,20 +4,20 @@ import SwiftAST
 
 public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
     public var name:String 
-    var module: ASTModule?=nil
-    var swiftType:Any.Type?
-    var runtimeType: RuntimeSwiftType?
+    public var module: ASTModule?=nil
+    public var swiftType:Any.Type?
+    public var runtimeType: RuntimeSwiftType?
     public var index:Int = -1 //archiving/unarchiving index
-    var nativeType:Any.Type?=nil
+    public var nativeType:Any.Type?=nil
     
     public var context:Scope?=nil //runtime only
     public var decl:Scope?=nil
 
-    class TryIndexedType: AST {
+    public class TryIndexedType: AST {
         public var next:AST? {get {return nil} set(newvalue) {}}
         public var previous:AST? {get {return nil} set(newvalue) {}}
         
-        func archive(data: SCLData) throws {
+        public func archive(data: SCLData) throws {
             //dummy
         }
         
@@ -50,7 +50,7 @@ public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
             return true
         }
     
-        static func unarchive(data: SCLData, instance:AST?) throws -> AST {
+        public static func unarchive(data: SCLData, instance:AST?) throws -> AST {
             if data.readBool()==false {
                 //indexed mode
                 let i=Int(data.readWord())
@@ -84,6 +84,8 @@ public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
         public func replace(name: String, with: AST) -> AST {return self}
         
         public func runDeclarations(isTopLevel:Bool) {}
+        
+        public func generate(delegate: ASTDelegate) throws {delegate.generateASTType_TryIndexedType(self)}        
 
         public func exec() throws -> Value {runtimeNilValue}
 
@@ -242,6 +244,8 @@ public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
     }
 
     public override func getType() throws -> ASTType {return self}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateASTType(self)}
 }
 
 public struct ASTGenericParameterClause: AST {
@@ -323,6 +327,8 @@ public struct ASTGenericParameterClause: AST {
     public func replace(name: String, with: AST) -> AST {return self}
   
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateASTGenericParameterClause(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -330,8 +336,8 @@ public struct ASTGenericParameterClause: AST {
 }
 
 public class GenericType: ASTType { //placeholder for generic args
-    var generic: ASTGenericParameterClause?
-    var dummy: Bool
+    public var generic: ASTGenericParameterClause?
+    public var dummy: Bool
     
     public override init() {
         generic=nil
@@ -523,8 +529,8 @@ public class StructOrClassType: GenericType {
     public var genericWhere: ASTGenericWhereClause?
     public var typeInheritanceClause: ASTTypeInheritanceClause?
     public var members:[Member]
-    var vtable:[(String,UInt8)]?=nil 
-    var mangledName:String?=nil
+    public var vtable:[(String,UInt8)]?=nil 
+    public var mangledName:String?=nil
     //var typeInfo:TypeInfo?=nil
     //var nativeProperties:[String:PropertyInfo]=[:]
     
@@ -998,8 +1004,8 @@ public class EnumType: StructOrClassType {
 
 
 public class DictionaryType: ASTType {
-    var key: ASTType
-    var value: ASTType
+    public var key: ASTType
+    public var value: ASTType
 
     public override init() {
         key=ASTType()

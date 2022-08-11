@@ -27,6 +27,107 @@ public enum ConditionType: Int {
     case greaterThan
 }
 
+
+public protocol ASTDelegate {
+    func generateASTBase(_ ast: ASTBase)
+    
+    func generateASTType(_ ast: ASTType)
+    
+    func generateASTType_TryIndexedType(_ ast: ASTType.TryIndexedType)
+    
+    func generateString(_ ast: String)
+    
+    func generateBool(_ ast: Bool)
+    
+    func generateInt(_ ast: Int)
+    
+    func generateDouble(_ ast: Double)
+    
+    func generateASTTypeIdentifier_TypeName(_ ast: ASTTypeIdentifier.TypeName)
+    
+    func generateASTTypeIdentifier(_ ast: ASTTypeIdentifier)
+    
+    func generateASTProtocolCompositionType(_ ast: ASTProtocolCompositionType)
+    
+    func generateASTGenericWhereClause_Requirement(_ ast: ASTGenericWhereClause.Requirement)
+    
+    func generateASTGenericWhereClause(_ ast: ASTGenericWhereClause)
+    
+    func generateASTTypeInheritanceClause(_ ast: ASTTypeInheritanceClause)
+    
+    func generateFunctionResult(_ ast: FunctionResult)
+    
+    func generateFunctionSignature(_ ast: FunctionSignature)
+    
+    func generateMember(_ ast: Member)
+    
+    func generateASTTypeAnnotation(_ ast: ASTTypeAnnotation)
+    
+    func generateASTGenericArgumentClause(_ ast: ASTGenericArgumentClause)
+    
+    func generateDictionaryEntry(_ ast: DictionaryEntry)
+    
+    func generatePlaygroundLiteral(_ ast: PlaygroundLiteral)
+    
+    func generateASTGenericParameterClause(_ ast: ASTGenericParameterClause)
+    
+    func generateUnaryOperation(_ ast: UnaryOperation)
+    
+    func generateBinaryOperation(_ ast: BinaryOperation)
+    
+    func generateVariable(_ ast: Variable)
+    
+    func generateVariableDeclaration(_ ast: VariableDeclaration)
+    
+    func generateTypealiasDeclaration(_ ast: TypealiasDeclaration)
+    
+    func generateImportDeclaration(_ ast: ImportDeclaration)
+    
+    func generateWillSetDidSetBlock(_ ast: WillSetDidSetBlock)
+    
+    func generateGetterSetterKeywordBlock(_ ast: GetterSetterKeywordBlock)
+    
+    func generateMethodMember(_ ast: MethodMember)
+    
+    func generateAssociativityTypeMember(_ ast: AssociativityTypeMember)
+    
+    func generateClassDeclaration(_ ast: ClassDeclaration)
+    
+    func generateStructDeclaration(_ ast: StructDeclaration)
+    
+    func generateProtocolDeclaration(_ ast: ProtocolDeclaration)
+    
+    func generateFunctionDeclaration(_ ast: FunctionDeclaration)
+    
+    func generateIdentifierExpression(_ ast: IdentifierExpression)
+    
+    func generateSubscriptMember(_ ast: SubscriptMember)
+    
+    func generateLiteral(_ ast: Literal)
+    
+    func generateExplicitMemberExpression(_ ast: ExplicitMemberExpression)
+    
+    func generateScope(_ ast: Scope)
+    
+    func generateASTModule(_ ast: ASTModule)
+    
+    func generateCompound(_ ast: Compound)
+    
+    func generateNoOp(_ ast: NoOp)
+    
+    func generateAssignment(_ ast: Assignment)
+    
+    func generateReturnStatement(_ ast: ReturnStatement)
+    
+    func generateClosureExpression(_ ast: ClosureExpression)
+    
+    func generateFunctionCallExpression(_ ast: FunctionCallExpression)
+    
+    func generateCodeBlock(_ ast: CodeBlock)
+    
+    
+    //public func generate(delegate: ASTDelegate) throws {delegate.generateASTBase(self)}
+}
 public protocol AST {
     var next:AST? {get set}
     var previous:AST? {get set}
@@ -40,10 +141,12 @@ public protocol AST {
     static func unarchive(data: SCLData, instance:AST?) throws -> AST
     
     func runDeclarations(isTopLevel:Bool) throws
+        func generate(delegate: ASTDelegate) throws
 
     func exec() throws -> Value
 
     func getType() throws -> ASTType
+    
 }
 
 public class ASTLocation: SourceLocatable, CustomStringConvertible {
@@ -314,9 +417,9 @@ public class ASTBase: AST {
     public var location: ASTLocation
     public var next:AST?=nil
     public var previous:AST?=nil
-    var needsDecl:Bool=true
-    var modifiers:[Modifier]=[]
-    var attributes:[Attribute]=[]
+    public var needsDecl:Bool=true
+    public var modifiers:[Modifier]=[]
+    public var attributes:[Attribute]=[]
     public var parent:Scope?
     
     public init() {
@@ -377,6 +480,8 @@ public class ASTBase: AST {
     }
     
     open func runDeclarations(isTopLevel:Bool) throws {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateASTBase(self)}
 
     open func exec() throws -> Value {runtimeNilValue}
     
@@ -430,6 +535,8 @@ extension String: AST {
     public func replace(name: String, with: AST) -> AST {return self}
     
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateString(self)}
 
     public func exec() throws -> Value {
         var v=RuntimeValue(string:self)
@@ -439,6 +546,7 @@ extension String: AST {
 
     public func getType() -> ASTType {return StringType}
 }
+
 extension Bool: AST {
     public var next:AST? {get {return nil} set(newvalue) {}}
     public var previous:AST? {get {return nil} set(newvalue) {}}
@@ -461,6 +569,8 @@ extension Bool: AST {
     public func replace(name: String, with: AST) -> AST {return self}
     
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateBool(self)}
 
     public func exec() throws -> Value {
         var v=RuntimeValue(bool:self)
@@ -493,6 +603,8 @@ extension Int: AST {
     public func replace(name: String, with: AST) -> AST {return self}
     
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateInt(self)}
 
     public func exec() throws -> Value {
         var v=RuntimeValue(int:self)
@@ -525,6 +637,8 @@ extension Double: AST {
     public func replace(name: String, with: AST) -> AST {return self}
     
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateDouble(self)}
 
     public func exec() throws -> Value {
         var v=RuntimeValue(double:self)
@@ -539,8 +653,8 @@ public protocol Declaration: AST {
 }
 
 public class UnaryOperation: ASTBase {
-    var operation: UnaryOperationType
-    var operand: AST
+    public var operation: UnaryOperationType
+    public var operand: AST
     
     public override init() {
         operation = .minus
@@ -589,12 +703,14 @@ public class UnaryOperation: ASTBase {
     }
 
     public override func getType() throws -> ASTType {return try operand.getType()}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateUnaryOperation(self)}
 }
 
 public class BinaryOperation: ASTBase {
-    var left: AST
-    var operation: BinaryOperationType
-    var right: AST
+    public var left: AST
+    public var operation: BinaryOperationType
+    public var right: AST
     
     public override init() {
         operation = .minus
@@ -647,6 +763,8 @@ public class BinaryOperation: ASTBase {
     }
 
     public override func getType() throws -> ASTType {return try left.getType()} //??
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateBinaryOperation(self)}
 }
 
 public class Variable: ASTBase, RuntimeVariable {
@@ -768,6 +886,8 @@ public class Variable: ASTBase, RuntimeVariable {
     }
 
     public override func getType() -> ASTType {return typeAnnotation.type}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateVariable(self)}
 }
 
 public class VariableDeclaration: ASTBase, Declaration {
@@ -870,6 +990,8 @@ public class VariableDeclaration: ASTBase, Declaration {
     }
 
     public override func getType() -> ASTType {return typeAnnotation.type}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateVariableDeclaration(self)}
 }
 
 public class TypealiasDeclaration: ASTBase, Declaration {
@@ -946,12 +1068,14 @@ public class TypealiasDeclaration: ASTBase, Declaration {
     }
 
     public override func getType() -> ASTType {return alias.getType()}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateTypealiasDeclaration(self)}
 }
 
 public class ImportDeclaration: Scope, Declaration {
-    var module:String
-    var imports:[String]? //nil to import all
-    var handle:ASTModule?=nil
+    public var module:String
+    public var imports:[String]? //nil to import all
+    public var handle:ASTModule?=nil
     
     public override init() {
         module=""
@@ -1019,6 +1143,8 @@ public class ImportDeclaration: Scope, Declaration {
     }
 
     public override func getType() -> ASTType {return VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateImportDeclaration(self)}
 }
 
 public class ASTTypeIdentifier : AST {
@@ -1070,6 +1196,8 @@ public class ASTTypeIdentifier : AST {
         public func replace(name: String, with: AST) -> AST {if self.name==name {return with};return self}
   
         public func runDeclarations(isTopLevel:Bool) {}
+        
+        public func generate(delegate: ASTDelegate) throws {delegate.generateASTTypeIdentifier_TypeName(self)}
         
         public func exec() throws -> Value {runtimeNilValue}
 
@@ -1124,6 +1252,8 @@ public class ASTTypeIdentifier : AST {
     }
   
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateASTTypeIdentifier(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
  
@@ -1178,6 +1308,8 @@ public class ASTProtocolCompositionType : AST {
     public func replace(name: String, with: AST) -> AST {return self}
   
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateASTProtocolCompositionType(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -1253,6 +1385,8 @@ public struct ASTGenericWhereClause: AST {
         public func replace(name: String, with: AST) -> AST {return self}
         
         public func runDeclarations(isTopLevel:Bool) {}
+        
+        public func generate(delegate: ASTDelegate) throws {delegate.generateASTGenericWhereClause_Requirement(self)}
 
         public func exec() throws -> Value {runtimeNilValue}
 
@@ -1306,6 +1440,8 @@ public struct ASTGenericWhereClause: AST {
     public func replace(name: String, with: AST) -> AST {return self}
   
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateASTGenericWhereClause(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -1363,6 +1499,8 @@ public struct ASTTypeInheritanceClause:AST {
     public func replace(name: String, with: AST) -> AST {return self}
   
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateASTTypeInheritanceClause(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -1494,6 +1632,8 @@ public class WillSetDidSetBlock: ASTBase {
     public override func replace(name: String, with: AST) -> AST {return self}
 
     public override func getType() throws -> ASTType {return VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateWillSetDidSetBlock(self)}
 }
 
 public class GetterSetterKeywordBlock: ASTBase {
@@ -1650,6 +1790,8 @@ public class GetterSetterKeywordBlock: ASTBase {
     public override func replace(name: String, with: AST) -> AST {return self}
 
     public override func getType() throws -> ASTType {return VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateGetterSetterKeywordBlock(self)}
 }
 
 public class PropertyMember: VariableDeclaration {
@@ -1794,9 +1936,12 @@ public struct FunctionResult:AST {
     
     public func runDeclarations(isTopLevel:Bool) throws {}
     
+    public func generate(delegate: ASTDelegate) throws {delegate.generateFunctionResult(self)}
+    
     public func exec() throws -> Value {runtimeNilValue}
 
     public func getType() throws -> ASTType {return type}
+    
 }
 
 public enum ThrowsKind: Int {
@@ -1953,6 +2098,8 @@ public struct FunctionSignature:AST {
     public func replace(name: String, with: AST) -> AST {return self}
     
     public func runDeclarations(isTopLevel:Bool) throws {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateFunctionSignature(self)}
     
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -2273,6 +2420,8 @@ public class SubscriptMember: ASTBase {
     public override func exec() throws -> Value {runtimeNilValue}
 
     public override func getType() -> ASTType {return resultType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateSubscriptMember(self)}
 }
 
 public class AssociativityTypeMember: ASTBase {
@@ -2376,6 +2525,8 @@ public class AssociativityTypeMember: ASTBase {
     public override func exec() throws -> Value {runtimeNilValue}
 
     public override func getType() throws -> ASTType {return assignmentType ?? VoidType}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateAssociativityTypeMember(self)}
 }
 
 public enum Member: AST {
@@ -2484,6 +2635,8 @@ public enum Member: AST {
                 try am.runDeclarations(isTopLevel: isTopLevel)
         }
     }
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateMember(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -2639,6 +2792,8 @@ public class ClassDeclaration: Scope, Declaration {
     }
     
     public override func getType() throws -> ASTType {return impl}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateClassDeclaration(self)}
 }
 
 public class StructDeclaration: Scope, Declaration {
@@ -2780,6 +2935,8 @@ public class StructDeclaration: Scope, Declaration {
     }
 
     public override func getType() throws -> ASTType {return impl}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateStructDeclaration(self)}
 }
 
 public class ASTTypeAnnotation : AST {
@@ -2831,6 +2988,8 @@ public class ASTTypeAnnotation : AST {
     public func replace(name: String, with: AST) -> AST {return self}
   
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateASTTypeAnnotation(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -2965,6 +3124,8 @@ public class ProtocolDeclaration: Scope, Declaration {
     }
 
     public override func getType() throws -> ASTType {return impl}
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateProtocolDeclaration(self)}
 }
 
 protocol Expression: AST {
@@ -3021,6 +3182,8 @@ public struct ASTGenericArgumentClause: AST {
     public func replace(name: String, with: AST) -> AST {return self}
   
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateASTGenericArgumentClause(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -3231,6 +3394,8 @@ public class IdentifierExpression: ASTBase, Expression {
 
         throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.internalError("IdentifierExpression getType, no type"), sourceLocatable: self.location)
     }
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateIdentifierExpression(self)}
 }
 
 public class DictionaryEntry: AST {
@@ -3279,6 +3444,8 @@ public class DictionaryEntry: AST {
     public func replace(name: String, with: AST) -> AST {return self}
     
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generateDictionaryEntry(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -3344,6 +3511,8 @@ public enum PlaygroundLiteral: AST {
     public func replace(name: String, with: AST) -> AST {return self}
     
     public func runDeclarations(isTopLevel:Bool) {}
+    
+    public func generate(delegate: ASTDelegate) throws {delegate.generatePlaygroundLiteral(self)}
 
     public func exec() throws -> Value {runtimeNilValue}
 
@@ -3507,6 +3676,8 @@ public class FunctionDeclaration : ASTBase, RuntimeFunctionDeclaration {
         }
     }
     
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateFunctionDeclaration(self)}
+    
     public override func exec() throws -> Value {
         //return try body?.exec() ?? runtimeNilValue
         //must call via FunctionCallExpression
@@ -3516,7 +3687,7 @@ public class FunctionDeclaration : ASTBase, RuntimeFunctionDeclaration {
     public override func getType() throws -> ASTType {return try signature.getType()} 
 }
 
-class Literal: ASTBase {
+public class Literal: ASTBase {
     public enum Kind {
         case `nil`
         case boolean(Bool)
@@ -3530,7 +3701,7 @@ class Literal: ASTBase {
     }
 
     public var kind:Kind
-    var value:Value?=nil
+    public var value:Value?=nil
             
     public override init() {
         kind = .nil
@@ -3731,6 +3902,8 @@ class Literal: ASTBase {
         }
     }
     
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateLiteral(self)}
+    
 }
 
 public class ExplicitMemberExpression : ASTBase {
@@ -3899,6 +4072,8 @@ public class ExplicitMemberExpression : ASTBase {
         
         
     }
+    
+    public override func generate(delegate: ASTDelegate) throws {delegate.generateExplicitMemberExpression(self)}
       
 }
 
