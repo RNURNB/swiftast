@@ -3321,7 +3321,10 @@ public class IdentifierExpression: ASTBase, Expression {
                         if i != nil {
                             impl=[i!]
                             if funcScopeDepth == -1 {self.isGlobal=true} //global var
-                            if funcScopeDepth>1 {self.isFree=true} //declared outside of current function
+                            if funcScopeDepth>1 {
+                                self.isFree=true //declared outside of current function
+                                i!.isCell=true //reference must be a cell
+                            } 
                         }
                    }
 
