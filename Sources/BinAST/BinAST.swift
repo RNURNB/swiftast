@@ -2678,6 +2678,8 @@ public enum Member: AST {
 
 public class ClassDeclaration: Scope, Declaration {
     public var impl: ClassType
+    public var builder: AnyObject?=nil //runtime only
+    
     
     public override init() {
         impl=ClassType()
@@ -2815,6 +2817,7 @@ public class ClassDeclaration: Scope, Declaration {
 
 public class StructDeclaration: Scope, Declaration {
     public var impl: StructType
+    public var builder: AnyObject?=nil //runtime only
     
     public override init() {
         impl=StructType()
@@ -3557,6 +3560,7 @@ public class FunctionDeclaration : ASTBase, RuntimeFunctionDeclaration {
     public var resolvedSymbol:UInt64=0 //runtime only
     //public var cif:Pffi_cif=nil //runtime only
     public var context:Scope?=nil //runtime only
+    public var builder: AnyObject?=nil //runtime only
     
     public override init() {
         self.name=""
