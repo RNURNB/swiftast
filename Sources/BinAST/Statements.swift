@@ -362,7 +362,9 @@ public class ReturnStatement : ASTBase, Statement {
     
     public override func replace(name: String, with: AST) -> AST {return self}
     
-    public override func runDeclarations(isTopLevel:Bool) throws {}
+    public override func runDeclarations(isTopLevel:Bool) throws {
+        try expression?.runDeclarations(isTopLevel: isTopLevel)
+    }
     
     public override func exec() throws -> Value {
         var result:Value = runtimeNilValue
