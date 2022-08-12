@@ -1041,7 +1041,8 @@ public class FunctionCallExpression : ASTBase {
                         }
     
                         //find constructor
-                        guard let c=try t.decl?.findFunc(name: "init", location: location, genericArgs: nil, recurse:false) else {
+                        var dummy=0
+                        guard let c=try t.decl?.findFunc(name: "init", location: location, funcScopeDepth: &dummy, genericArgs: nil, recurse:false) else {
                             throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.noAccessibleInitializers(t.name), sourceLocatable: self.location)
                         }
                         

@@ -771,6 +771,7 @@ public class Variable: ASTBase, RuntimeVariable {
     public var name: String
     public var isConstant: Bool
     public var isCell: Bool = false
+    public var isGlobal: Bool = false
     public var typeAnnotation:ASTTypeAnnotation
     public var getterSetterKeywordBlock:GetterSetterKeywordBlock?
     public var willSetDidSetBlock: WillSetDidSetBlock?
@@ -3320,7 +3321,10 @@ public class IdentifierExpression: ASTBase, Expression {
                         let i=try ASTModule.current.currentScope.findVar(name: id, location:self.location,funcScopeDepth: &funcScopeDepth)
                         if i != nil {
                             impl=[i!]
-                            if funcScopeDepth == -1 {self.isGlobal=true} //global var
+                            if funcScopeDepth == -1 {
+                                self.isGlobal=true //global var
+                                i!.isGlobal=true
+                            }
                             if funcScopeDepth>1 {
                                 self.isFree=true //declared outside of current function
                                 i!.isCell=true //reference must be a cell
@@ -3330,10 +3334,22 @@ public class IdentifierExpression: ASTBase, Expression {
 
                    if impl == nil {
                        //TODO Check for "." in name?
-                       impl=try ASTModule.current.currentScope.findFunc(name: id, location:self.location, genericArgs: gac != nil ? [gac!.argumentList] : nil)
+                       var funcScopeDepth=0
+                       impl=try ASTModule.current.currentScope.findFunc(name: id, location:self.location, funcScopeDepth: &funcScopeDepth, genericArgs: gac != nil ? [gac!.argumentList] : nil)
                        if impl==nil {
-                            let i=try ASTModule.current.currentScope.findType(name: id, location:self.location, genericArgs: gac != nil ? [gac!.argumentList] : nil)
-                            if i != nil {impl=[i!]}
+                            var funcScopeDepth=0
+                            let i=try ASTModule.current.currentScope.findType(name: id, location:self.location, funcScopeDepth: &funcScopeDepth, genericArgs: gac != nil ? [gac!.argumentList] : nil)
+                            if i != nil {
+                                impl=[i!]
+                                i!.isGlobal=funcScopeDepth == -1
+                            }
+                       }
+                       else {
+                           if funcScopeDepth == -1 {
+                               for i in impl! {
+                                   (i as! FunctionDeclaration).isGlobal=true
+                               }
+                           }
                        }
                    }
                case .implicitParameterName(_/*let i*/,_/*let gac*/):
@@ -3564,6 +3580,7 @@ public class FunctionDeclaration : ASTBase, RuntimeFunctionDeclaration {
     //public var cif:Pffi_cif=nil //runtime only
     public var context:Scope?=nil //runtime only
     public var builder: AnyObject?=nil //runtime only
+    public var isGlobal: Bool = false //runtime only
     
     public override init() {
         self.name=""

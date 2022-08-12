@@ -11,6 +11,7 @@ public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
     public var nativeType:Any.Type?=nil
     
     public var context:Scope?=nil //runtime only
+    public var isGlobal: Bool = false
     public var decl:Scope?=nil
 
     public class TryIndexedType: AST {
@@ -68,7 +69,8 @@ public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
                 let name=data.readShortString()!
                 
                 //we come from imported module
-                let t=try m.findType(name: name, location: SourceLocation(identifier: "", line: -1, column: -1), genericArgs: nil, recurse:false) 
+                var dummy=0
+                let t=try m.findType(name: name, location: SourceLocation(identifier: "", line: -1, column: -1), funcScopeDepth: &dummy, genericArgs: nil, recurse:false) 
                 try ASTModule.assert( t != nil,msg: "imported type \(name) from imported module \(m.name) not found")
                 
                 data.types[i] = t!
@@ -221,7 +223,8 @@ public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
             
                 for mm in allModules {
                     if mm.name==m {
-                        if let t=try mm.findType(name: n, location: atype, genericArgs: hasGenericArguments ? Array(genericArguments[1...]) : nil ) {
+                        var dummy=0
+                        if let t=try mm.findType(name: n, location: atype, funcScopeDepth: &dummy, genericArgs: hasGenericArguments ? Array(genericArguments[1...]) : nil ) {
                             result=t
                             break
                         }
@@ -234,7 +237,8 @@ public class ASTType: ASTBase, CustomStringConvertible, Hashable, RuntimeType {
         if result==nil {
             //search all loaded modules for this type
             for m in allModules {
-                if let t=try m.findType(name: n!, location: atype, genericArgs: hasGenericArguments ? genericArguments : nil) {result=t;break}
+                var dummy=0
+                if let t=try m.findType(name: n!, location: atype, funcScopeDepth: &dummy, genericArgs: hasGenericArguments ? genericArguments : nil) {result=t;break}
             }
         
             if result==nil {throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.noTypeNamed(n!), sourceLocatable: atype)}
@@ -564,7 +568,8 @@ public class StructOrClassType: GenericType {
         }
 
         //check for method
-        if let f=try self.decl?.findFunc(name: name, location: location, genericArgs: nil, recurse:false) {
+        var dummy=0
+        if let f=try self.decl?.findFunc(name: name, location: location, funcScopeDepth: &dummy, genericArgs: nil, recurse:false) {
             /*if f.count==1 {
                 return Value(function: RuntimeMethod(function: f[0], instance: instance!))
             }
