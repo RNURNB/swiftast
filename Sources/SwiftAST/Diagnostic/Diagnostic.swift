@@ -26,10 +26,25 @@ public struct Diagnostic {
   public let level: Level
   public let kind: DiagnosticKind
   public let location: SourceLocation
+  public let file: String
+  public let function: String
+  public let line: Int
 
-  public init(level: Level, kind: DiagnosticKind, location: SourceLocation) {
+  public init(level: Level, kind: DiagnosticKind, location: SourceLocation, file: String, function: String, line: Int) {
     self.level = level
     self.kind = kind
     self.location = location
+    self.file=file
+    self.function=function
+    self.line=line
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }

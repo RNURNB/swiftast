@@ -3317,7 +3317,7 @@ public class IdentifierExpression: ASTBase, Expression {
                    name=id
                    if gac==nil {
                         var funcScopeDepth=0
-                        let i=try ASTModule.current.findVar(name: id, location:self.location,funcScopeDepth: &funcScopeDepth)
+                        let i=try ASTModule.current.currentScope.findVar(name: id, location:self.location,funcScopeDepth: &funcScopeDepth)
                         if i != nil {
                             impl=[i!]
                             if funcScopeDepth == -1 {self.isGlobal=true} //global var
@@ -3327,9 +3327,9 @@ public class IdentifierExpression: ASTBase, Expression {
 
                    if impl == nil {
                        //TODO Check for "." in name?
-                       impl=try ASTModule.current.findFunc(name: id, location:self.location, genericArgs: gac != nil ? [gac!.argumentList] : nil)
+                       impl=try ASTModule.current.currentScope.findFunc(name: id, location:self.location, genericArgs: gac != nil ? [gac!.argumentList] : nil)
                        if impl==nil {
-                            let i=try ASTModule.current.findType(name: id, location:self.location, genericArgs: gac != nil ? [gac!.argumentList] : nil)
+                            let i=try ASTModule.current.currentScope.findType(name: id, location:self.location, genericArgs: gac != nil ? [gac!.argumentList] : nil)
                             if i != nil {impl=[i!]}
                        }
                    }

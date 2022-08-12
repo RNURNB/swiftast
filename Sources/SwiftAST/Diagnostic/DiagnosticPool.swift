@@ -30,25 +30,28 @@ public class DiagnosticPool {
   public var diagnostics:[Diagnostic] {_diagnostics}
 
   public func appendFatal(
-    kind: DiagnosticKind, sourceLocatable: SourceLocatable
+    kind: DiagnosticKind, sourceLocatable: SourceLocatable, file:String=#file, function:String=#function,
+    line:Int=#line
   ) -> Error {
-    _append(.fatal, kind, sourceLocatable)
+    _append(.fatal, kind, sourceLocatable, file: file, function: function, line: line)
     return DiagnosticStopper()
   }
 
   public func appendError(
-    kind: DiagnosticKind, sourceLocatable: SourceLocatable
+    kind: DiagnosticKind, sourceLocatable: SourceLocatable, file:String=#file, function:String=#function,
+    line:Int=#line
   ) throws {
-    _append(.error, kind, sourceLocatable)
+    _append(.error, kind, sourceLocatable, file: file, function: function, line: line)
     if _diagnostics.filter({ $0.level == .error }).count >= 10 {
       throw DiagnosticStopper()
     }
   }
 
   public func appendWarning(
-    kind: DiagnosticKind, sourceLocatable: SourceLocatable
+    kind: DiagnosticKind, sourceLocatable: SourceLocatable, file:String=#file, function:String=#function,
+    line:Int=#line
   ) throws {
-    _append(.warning, kind, sourceLocatable)
+    _append(.warning, kind, sourceLocatable, file: file, function: function, line: line)
     if _diagnostics.filter({ $0.level == .warning }).count >= 50 {
       throw DiagnosticStopper()
     }
@@ -57,11 +60,12 @@ public class DiagnosticPool {
   private func _append(
     _ level: Diagnostic.Level,
     _ kind: DiagnosticKind,
-    _ source: SourceLocatable
+    _ source: SourceLocatable, 
+    file:String=#file, function:String=#function,line:Int=#line
   ) {
     if level == .error || level == .fatal {hasErrors=true}
     let diagnostic = Diagnostic(
-      level: level, kind: kind, location: source.sourceLocation)
+      level: level, kind: kind, location: source.sourceLocation, file: file, function: function, line: line)
     //print("DiagnosticPool._append:",diagnostic)
     _diagnostics.append(diagnostic)
   }
