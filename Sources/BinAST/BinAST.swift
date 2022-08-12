@@ -150,10 +150,10 @@ public protocol AST {
 }
 
 public class ASTLocation: SourceLocatable, CustomStringConvertible {
-    public var module:ASTModule?
-    public var file:Int
-    public var line:Int
-    public var column:Int
+    var module:ASTModule?
+    var file:Int
+    var line:Int
+    var column:Int
 
     public var description: String {
         if module != nil {
@@ -770,12 +770,14 @@ public class BinaryOperation: ASTBase {
 public class Variable: ASTBase, RuntimeVariable {
     public var name: String
     public var isConstant: Bool
+    public var isCell: Bool = false
     public var typeAnnotation:ASTTypeAnnotation
     public var getterSetterKeywordBlock:GetterSetterKeywordBlock?
     public var willSetDidSetBlock: WillSetDidSetBlock?
     public var value:Value?=nil
     public var modifyAccessorMangledName:String?=nil
     public var decl: VariableDeclaration?=nil //runtime only
+    public var pdecl: FunctionSignature.Parameter?=nil //runtime only
         
     public override init() {
         name=""
@@ -1957,6 +1959,7 @@ public struct FunctionSignature:AST {
         public var typeAnnotation: ASTTypeAnnotation
         public var defaultArgumentClause: AST?
         public var isVarargs: Bool
+        public var variable: Variable
     
         public init() {
             externalName=nil
@@ -1964,6 +1967,8 @@ public struct FunctionSignature:AST {
             typeAnnotation=ASTTypeAnnotation()
             defaultArgumentClause=nil
             isVarargs=false
+            variable=Variable()
+            self.variable.pdecl=self
         }
 
         public init(externalName: String? = nil, localName: String, typeAnnotation: ASTTypeAnnotation) {
@@ -1972,6 +1977,10 @@ public struct FunctionSignature:AST {
             self.typeAnnotation = typeAnnotation
             self.defaultArgumentClause = nil
             self.isVarargs = false
+            self.variable=Variable(name: localName,typeAnnotation: typeAnnotation, isConstant: false, attributes: [], 
+                                   modifiers: [], location: ASTLocation())
+            self.variable.pdecl=self
+            self.variable.isCell=typeAnnotation.isInOutParameter
         }
 
         public init(externalName: String? = nil, localName: String, typeAnnotation: ASTTypeAnnotation, isVarargs: Bool = false) {
@@ -1980,6 +1989,10 @@ public struct FunctionSignature:AST {
             self.typeAnnotation = typeAnnotation
             self.defaultArgumentClause = nil
             self.isVarargs = isVarargs
+            self.variable=Variable(name: localName,typeAnnotation: typeAnnotation, isConstant: false, attributes: [], 
+                                   modifiers: [], location: ASTLocation())
+            self.variable.pdecl=self
+            self.variable.isCell=typeAnnotation.isInOutParameter
         }
 
         public init(externalName: String? = nil, localName: String, typeAnnotation: ASTTypeAnnotation, defaultArgumentClause: AST? = nil) {
@@ -1988,6 +2001,10 @@ public struct FunctionSignature:AST {
             self.typeAnnotation = typeAnnotation
             self.defaultArgumentClause = defaultArgumentClause
             self.isVarargs = false
+            self.variable=Variable(name: localName,typeAnnotation: typeAnnotation, isConstant: false, attributes: [], 
+                                   modifiers: [], location: ASTLocation())
+            self.variable.pdecl=self
+            self.variable.isCell=typeAnnotation.isInOutParameter
         }
         
         func archive(data: SCLData) throws {
@@ -3199,6 +3216,8 @@ public class IdentifierExpression: ASTBase, Expression {
 
     public var kind:IdentiferKind
     public var impl:[AST]?
+    public var isFree: Bool=false
+    public var isGlobal: Bool = false
 
     public override init() {
         kind = .bindingReference("")
@@ -3294,8 +3313,13 @@ public class IdentifierExpression: ASTBase, Expression {
                case .identifier(let id, let gac):
                    name=id
                    if gac==nil {
-                        let i=try ASTModule.current.findVar(name: id, location:self.location)
-                        if i != nil {impl=[i!]}
+                        var funcScopeDepth=0
+                        let i=try ASTModule.current.findVar(name: id, location:self.location,funcScopeDepth: &funcScopeDepth)
+                        if i != nil {
+                            impl=[i!]
+                            if funcScopeDepth == -1 {self.isGlobal=true} //global var
+                            if funcScopeDepth>1 {self.isFree=true} //declared outside of current function
+                        }
                    }
 
                    if impl == nil {

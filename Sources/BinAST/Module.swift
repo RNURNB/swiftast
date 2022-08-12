@@ -272,8 +272,10 @@ public class Scope: ASTBase, Identifiable {
         return try parent?.findFunc(name: n, location:location, genericArgs: genericArgs)
     }
     
-    public func findVar(name: String, location: SourceLocatable, recurse:Bool=true) throws -> Variable? {
+    public func findVar(name: String, location: SourceLocatable, funcScopeDepth:inout Int, recurse:Bool=true) throws -> Variable? {
         //print("try find var '",name,"' in ",self)
+        if self is ASTModule {funcScopeDepth = -1} //global
+        if self is FuncScope {funcScopeDepth+=1}
         
         let n=name
         if let i=n.firstIndex(of:".") {
@@ -288,7 +290,8 @@ public class Scope: ASTBase, Identifiable {
             
             //print("found type: ",type," with decl:",type?.decl)
             
-            return try type?.decl?.findVar(name: n, location: location, recurse: false)
+            var dummy=0 //dummy func scope
+            return try type?.decl?.findVar(name: n, location: location, funcScopeDepth: &dummy, recurse: false)
         }
         
         if let result=declaredVars[n] {
@@ -301,7 +304,7 @@ public class Scope: ASTBase, Identifiable {
         if !recurse {return nil}
         
         //recursive parent search for type
-        return try parent?.findVar(name: n, location:location)
+        return try parent?.findVar(name: n, location:location, funcScopeDepth: &funcScopeDepth)
     }
     
     public func findType(name: String, location: SourceLocatable, genericArgs: [[ASTType]]? = nil, recurse:Bool=true) throws -> ASTType? {
@@ -420,7 +423,8 @@ public class Scope: ASTBase, Identifiable {
         if try ASTModule.current.currentScope.findType(name: type.name, location: type.location, genericArgs: nil, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(type.name), sourceLocatable: type.location)
         }
-        if try ASTModule.current.currentScope.findVar(name: type.name, location: type.location, recurse:false) != nil {
+        var dummy=0
+        if try ASTModule.current.currentScope.findVar(name: type.name, location: type.location, funcScopeDepth: &dummy, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(type.name), sourceLocatable: type.location)
         }
         if try ASTModule.current.currentScope.findFunc(name: type.name, location: type.location, genericArgs: nil, recurse:false) != nil {
@@ -439,7 +443,8 @@ public class Scope: ASTBase, Identifiable {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(type.name), sourceLocatable: type.location)
             }
         }*/
-        if try ASTModule.current.currentScope.findVar(name: variable.name, location: variable.location, recurse:false) != nil {
+        var dummy=0
+        if try ASTModule.current.currentScope.findVar(name: variable.name, location: variable.location, funcScopeDepth: &dummy, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(variable.name), sourceLocatable: variable.location)
         }
         if try ASTModule.current.currentScope.findType(name: variable.name, location: variable.location, genericArgs: nil, recurse:false) != nil {
@@ -464,7 +469,8 @@ public class Scope: ASTBase, Identifiable {
         if try ASTModule.current.currentScope.findFunc(name: function.name, location: function.location, genericArgs: nil, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(function.name), sourceLocatable: function.location)
         }
-        if try ASTModule.current.currentScope.findVar(name: function.name, location: function.location, recurse:false) != nil {
+        var dummy=0
+        if try ASTModule.current.currentScope.findVar(name: function.name, location: function.location, funcScopeDepth: &dummy, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(function.name), sourceLocatable: function.location)
         }
         if try ASTModule.current.currentScope.findType(name: function.name, location: function.location, genericArgs: nil, recurse:false) != nil {
@@ -481,7 +487,10 @@ public class Scope: ASTBase, Identifiable {
     }
     
     public override func generate(delegate: ASTDelegate) throws {try delegate.generateScope(self)}
-}
+} 
+
+public class FuncScope: Scope {
+}
 
 public class ASTModule: Scope, CustomStringConvertible {
     public var name: String
@@ -551,7 +560,8 @@ public class ASTModule: Scope, CustomStringConvertible {
             if try currentScope.findFunc(name: type.name, location: type.location, genericArgs: nil, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(type.name), sourceLocatable: type.location)
             }
-            if try currentScope.findVar(name: type.name, location: type.location, recurse:false) != nil {
+            var dummy=0
+            if try currentScope.findVar(name: type.name, location: type.location, funcScopeDepth: &dummy, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(type.name), sourceLocatable: type.location)
             }
             
@@ -565,7 +575,8 @@ public class ASTModule: Scope, CustomStringConvertible {
     
     public override func declareVar(variable: Variable) throws {
         if currentScope is ASTModule {
-            if try currentScope.findVar(name: variable.name, location: variable.location, recurse:false) != nil {
+            var dummy=0
+            if try currentScope.findVar(name: variable.name, location: variable.location, funcScopeDepth: &dummy, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(variable.name), sourceLocatable: variable.location)
             }
             if try currentScope.findFunc(name: variable.name, location: variable.location, genericArgs: nil, recurse:false) != nil {
@@ -588,7 +599,8 @@ public class ASTModule: Scope, CustomStringConvertible {
             if try currentScope.findFunc(name: function.name, location: function.location, genericArgs: nil, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(function.name), sourceLocatable: function.location)
             }
-            if try currentScope.findVar(name: function.name, location: function.location, recurse:false) != nil {
+            var dummy=0
+            if try currentScope.findVar(name: function.name, location: function.location, funcScopeDepth: &dummy, recurse:false) != nil {
                 throw DiagnosticPool.shared.appendFatal(kind: ParserErrorKind.invalidRedeclaration(function.name), sourceLocatable: function.location)
             }
             if try currentScope.findType(name: function.name, location: function.location, genericArgs: nil, recurse:false) != nil {
