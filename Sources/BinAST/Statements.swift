@@ -68,11 +68,11 @@ public class Compound: ASTBase, Declaration {
     public override func replace(name: String, with: AST) -> AST {return self}
     
     public override func runDeclarations(isTopLevel:Bool) throws {
-        var s=children.first
+        /*var s=children.first
         while s != nil {
             try s!.runDeclarations(isTopLevel:isTopLevel)
             s=s!.next
-        }
+        }*/
         start=children.first
 
         //remove ignored nodes
@@ -293,11 +293,11 @@ public class CodeBlock : ASTBase, Statement {
     public override func replace(name: String, with: AST) -> AST {return self}
     
     public override func runDeclarations(isTopLevel:Bool) throws {
-        var s=statements.first
+        /*var s=statements.first
         while s != nil {
             try s!.runDeclarations(isTopLevel:isTopLevel)
             s=s!.next
-        }
+        }*/
         start=statements.first
         if start is NoOp {start=start!.next}
     }
